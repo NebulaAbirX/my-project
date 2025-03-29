@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>رايد - الدردشات</title>
+  <meta name="description" content="دردشات السائق مع الركاب في تطبيق رايد لمشاركة الركوب">
+  <meta name="keywords" content="مشاركة الركوب، تاكسي، سائق، دردشة، تواصل، تطبيق ويب تقدمي">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+<link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/vendor/aos/aos.css" rel="stylesheet">
+<link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+<!-- Main CSS Files -->
+<link href="assets/css/main.css" rel="stylesheet">
+<link href="assets/css/driver-dashboard.css" rel="stylesheet">
+<link href="assets/css/responsive.css" rel="stylesheet">
+  
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#3498db">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <style>
+    /* تصحيح أنماط الدردشة */
+    .driver-dashboard {
+      background-color: #f5f7fa;
+    }
+    
+    .chat-container {
+      height: calc(100vh - 200px);
+    }
+    
+    .chat-list {
+      border-left: 1px solid #eee;
+    }
+    
+    .rtl .chat-list {
+      border-right: 1px solid #eee;
+      border-left: none;
+    }
+    
+    .contact-item {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-item:hover, .contact-item.active {
+      background-color: rgba(52, 152, 219, 0.1);
+    }
+    
+    .chat-body {
+      height: calc(100% - 120px);
+      overflow-y: auto;
+    }
+    
+    .message-bubble-sent {
+      background-color: #3498db;
+      color: white;
+      border-radius: 15px;
+      border-top-left-radius: 0;
+      padding: 10px 15px;
+      max-width: 80%;
+    }
+    
+    .message-bubble-received {
+      background-color: #f8f9fa;
+      border-radius: 15px;
+      border-top-right-radius: 0;
+      padding: 10px 15px;
+      max-width: 80%;
+    }
+    
+    .status-badge {
+      padding: 0.35rem 0.6rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .status-online {
+      background-color: #28a745;
+      color: white;
+    }
+    
+    .status-offline {
+      background-color: #6c757d;
+      color: white;
+    }
+    
+    .dashboard-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      margin-bottom: 1.5rem;
+    }
+    
+    .sidebar {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      height: 100%;
+    }
+    
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .sidebar-nav li {
+      margin-bottom: 5px;
+    }
+    
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-radius: 8px;
+      color: #2c3e50;
+      transition: all 0.3s;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    
+    .sidebar-nav a i {
+      font-size: 18px;
+      margin-left: 10px;
+    }
+    
+    .sidebar-nav a:hover {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: #3498db;
+    }
+    
+    .sidebar-nav a.active {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    @media (max-width: 991px) {
+      .chat-list {
+        height: 40vh;
+        overflow-y: auto;
+        border-bottom: 1px solid #eee;
+        border-left: none;
+      }
+      
+      .chat-window {
+        height: 60vh;
+      }
+      
+      .chat-container {
+        height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body class="driver-dashboard rtl">
+  <!-- Header -->
+  <header id="header" class="header shadow-sm fixed-top bg-white">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <button class="btn btn-sm d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <a href="index.html" class="logo d-flex align-items-center">
+          <span class="fs-4 fw-bold text-primary">رايد</span>
+          <span class="badge bg-primary ms-2 text-uppercase">السائق</span>
+        </a>
+      </div>
+      
+      <div class="d-flex align-items-center gap-3">
+        <div class="dropdown">
+          <button class="btn btn-link position-relative text-dark p-0" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell-fill fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              3
+              <span class="visually-hidden">إشعارات غير مقروءة</span>
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+            <li><h6 class="dropdown-header">الإشعارات</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-car-front text-primary bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">طلب رحلة جديد</h6>
+                  <p class="mb-0 text-muted small">من العميل سارة العبدالله</p>
+                  <small class="text-muted">منذ 5 دقائق</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-cash text-success bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">تأكيد استلام دفعة نقدية</h6>
+                  <p class="mb-0 text-muted small">تم تسجيل استلام 65 ر.س من العميل</p>
+                  <small class="text-muted">منذ ساعتين</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-center" href="#">عرض جميع الإشعارات</a></li>
+          </ul>
+        </div>
+        <img src="assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle" width="40" height="40">      </div>
+    </div>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 col-xl-2 offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header d-lg-none">
+          <h5 class="offcanvas-title">القائمة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <div class="d-flex flex-column flex-shrink-0 p-3 h-100">
+          <div class="text-center mb-4 d-lg-none">
+            <img src="assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle mb-2" width="80" height="80">
+            <h6 class="mb-0">أحمد محمد</h6>
+            <p class="text-muted small mb-2">ID: S-578942</p>
+          </div>
+          
+          <ul class="nav nav-pills flex-column mb-auto sidebar-nav">
+            <li class="nav-item">
+              ```html
+<a href="driver/dashboard.html" class="nav-link">
+  <i class="bi bi-speedometer2 me-2"></i>
+  لوحة التحكم
+</a>
+            </li>
+            <li>
+              <a href="../driver/trips.html" class="nav-link">
+                <i class="bi bi-car-front me-2"></i>
+                الرحلات
+              </a>
+            </li>
+            <li>
+              <a href="../driver/earnings.html" class="nav-link">
+                <i class="bi bi-wallet me-2"></i>
+                الأرباح
+              </a>
+            </li>
+            <li>
+              <a href="chat.html" class="nav-link active">
+                <i class="bi bi-chat-dots me-2"></i>
+                الدردشات
+              </a>
+            </li>
+            <li>
+              <a href="profile.php" class="nav-link">
+                <i class="bi bi-person me-2"></i>
+                الملف الشخصي
+              </a>
+            </li>
+            <li>
+              <a href="../profile/settings.html" class="nav-link">
+                <i class="bi bi-gear me-2"></i>
+                الإعدادات
+              </a>
+            </li>
+            <li>
+              <a href="support.html" class="nav-link">
+                <i class="bi bi-question-circle me-2"></i>
+                الدعم الفني
+              </a>
+            </li>
+          </ul>
+          <hr>
+          <a href="index.html" class="nav-link">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            تسجيل الخروج
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9 col-xl-10 py-5 ms-auto" style="margin-top: 60px;">
+        <div class="container-fluid">
+          <!-- Messages Section -->
+          <section id="messages" class="mb-5">
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5><i class="bi bi-chat-dots me-2"></i> الدردشات</h5>
+                <div>
+                  <button class="btn btn-sm btn-outline-primary me-2">
+                    <i class="bi bi-search me-1"></i> البحث
+                  </button>
+                  <div class="dropdown d-inline-block">
+                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="bi bi-plus-circle me-1"></i> دردشة جديدة
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-people me-2"></i> مع راكب</a></li>
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-headset me-2"></i> مع الدعم الفني</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <!-- قائمة المحادثات -->
+                <div class="col-lg-4 mb-4 mb-lg-0 chat-list">
+                  <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-bottom-0 py-3">
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="البحث في الدردشات...">
+                        <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
+                      </div>
+                    </div>
+                    <div class="card-body p-0" style="overflow-y: auto;">
+                      <div class="list-group list-group-flush">
+                        <!-- دردشة نشطة -->
+                        <a href="#chat1" class="list-group-item list-group-item-action active py-3 px-3 contact-item" aria-current="true" data-contact="1">
+                          <div class="d-flex align-items-center">
+                            <div class="position-relative me-3">
+                              <img src="assets/img/avatar-3.webp" alt="صورة العميل" class="rounded-circle" width="50" height="50">
+                              <span class="position-absolute bottom-0 start-0 badge rounded-circle bg-success p-1 border border-white" style="width: 12px; height: 12px;"></span>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 text-truncate">سارة العبدالله</h6>
+                                <small class="text-muted">الآن</small>
+                              </div>
+                              <p class="text-truncate mb-0">شكراً جزيلاً لك، سأكون في انتظارك</p>
+                            </div>
+                          </div>
+                        </a>
+                        
+                        <!-- المزيد من الدردشات -->
+                        <a href="#chat2" class="list-group-item list-group-item-action py-3 px-3 contact-item" data-contact="2">
+                          <div class="d-flex align-items-center">
+                            <div class="position-relative me-3">
+                              <img src="assets/img/avatar-4.webp" alt="صورة العميل" class="rounded-circle" width="50" height="50">
+                              <span class="position-absolute bottom-0 start-0 badge rounded-circle bg-secondary p-1 border border-white" style="width: 12px; height: 12px;"></span>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 text-truncate">نورة السعيد</h6>
+                                <small class="text-muted">11:20 ص</small>
+                              </div>
+                              <p class="text-truncate mb-0">وصلت بسلامة، شكراً جزيلاً لك</p>
+                            </div>
+                          </div>
+                        </a>
+                        
+                        <a href="#chat3" class="list-group-item list-group-item-action py-3 px-3 contact-item" data-contact="3">
+                          <div class="d-flex align-items-center">
+                            <div class="position-relative me-3">
+                              <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 50px; height: 50px;">
+                                <i class="bi bi-headset fs-4"></i>
+                              </div>
+                              <span class="position-absolute bottom-0 start-0 badge rounded-circle bg-danger p-1 border border-white" style="width: 12px; height: 12px;"></span>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 text-truncate">الدعم الفني</h6>
+                                <small class="text-muted">أمس</small>
+                              </div>
+                              <p class="text-truncate mb-0 fw-bold">مرحباً أحمد، هل يمكنني مساعدتك بخصوص...</p>
+                            </div>
+                          </div>
+                        </a>
+                        
+                        <a href="#chat4" class="list-group-item list-group-item-action py-3 px-3 contact-item" data-contact="4">
+                          <div class="d-flex align-items-center">
+                            <div class="position-relative me-3">
+                              <img src="assets/img/avatar-2.webp" alt="صورة العميل" class="rounded-circle" width="50" height="50">
+                              <span class="position-absolute bottom-0 start-0 badge rounded-circle bg-secondary p-1 border border-white" style="width: 12px; height: 12px;"></span>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 text-truncate">محمد العتيبي</h6>
+                                <small class="text-muted">الأمس</small>
+                              </div>
+                              <p class="text-truncate mb-0">حسناً، سأنتظرك عند بوابة الجامعة</p>
+                            </div>
+                          </div>
+                        </a>
+                        
+                        <a href="#chat5" class="list-group-item list-group-item-action py-3 px-3 contact-item" data-contact="5">
+                          <div class="d-flex align-items-center">
+                            <div class="position-relative me-3">
+                              <img src="assets/img/avatar-5.webp" alt="صورة العميل" class="rounded-circle" width="50" height="50">
+                              <span class="position-absolute bottom-0 start-0 badge rounded-circle bg-secondary p-1 border border-white" style="width: 12px; height: 12px;"></span>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 text-truncate">خالد القحطاني</h6>
+                                <small class="text-muted">الثلاثاء</small>
+                              </div>
+                              <p class="text-truncate mb-0">شكراً على الرحلة الرائعة</p>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- محتوى المحادثة -->
+                <div class="col-lg-8 chat-window">
+                  <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white py-3">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <img src="assets/img/avatar-3.webp" alt="صورة العميل" class="rounded-circle me-3" width="40" height="40">
+                          <div>
+                            <h6 class="mb-0">سارة العبدالله</h6>
+                            <small class="text-success">متصل الآن</small>
+                          </div>
+                        </div>
+                        <div>
+                          <button class="btn btn-sm btn-light me-1" title="معلومات الرحلة">
+                            <i class="bi bi-info-circle"></i>
+                          </button>
+                          <button class="btn btn-sm btn-light me-1" title="الاتصال">
+                            <i class="bi bi-telephone"></i>
+                          </button>
+                          <div class="dropdown d-inline-block">
+                            <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                              <li><a class="dropdown-item" href="#"><i class="bi bi-archive me-2"></i> أرشفة المحادثة</a></li>
+                              <li><a class="dropdown-item" href="#"><i class="bi bi-bell-slash me-2"></i> كتم الإشعارات</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-exclamation-triangle me-2"></i> الإبلاغ عن مشكلة</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body p-3 chat-body" id="chatBody">
+                      <!-- تاريخ -->
+                      <div class="text-center mb-3">
+                        <span class="badge bg-light text-dark">اليوم، 3:10 م</span>
+                      </div>
+                      
+                      <!-- رسالة من الطرف الآخر -->
+                      <div class="d-flex mb-3">
+                        <img src="assets/img/avatar-3.webp" alt="صورة العميل" class="rounded-circle align-self-start me-2" width="30" height="30">
+                        <div class="message-bubble-received">
+                          <p class="mb-0">مرحباً، أنا بانتظارك أمام المجمع التجاري. هل أنت قريب؟</p>
+                          <small class="text-muted">3:10 م</small>
+                        </div>
+                      </div>
+                      
+                      <!-- رسالة من السائق -->
+                      <div class="d-flex justify-content-end mb-3">
+                        <div class="message-bubble-sent">
+                          <p class="mb-0">مرحباً سارة، نعم أنا قريب، سأصل خلال 5 دقائق تقريباً</p>
+                          <small class="text-white-50">3:12 م</small>
+                        </div>
+                      </div>
+                      
+                      <!-- رسالة من الطرف الآخر -->
+                      <div class="d-flex mb-3">
+                        <img src="assets/img/avatar-3.webp" alt="صورة العميل" class="rounded-circle align-self-start me-2" width="30" height="30">
+                        <div class="message-bubble-received">
+                          <p class="mb-0">تمام، أنا أرتدي معطف أزرق وأقف بجانب مدخل المطعم الإيطالي</p>
+                          <small class="text-muted">3:15 م</small>
+                        </div>
+                      </div>
+                      
+                      <!-- رسالة من السائق -->
+                      <div class="d-flex justify-content-end mb-3">
+                        <div class="message-bubble-sent">
+                          <p class="mb-0">حسناً، وصلت للتو. سيارتي تويوتا كامري بيضاء، رقم اللوحة ح د ك 5428</p>
+                          <small class="text-white-50">3:18 م</small>
+                        </div>
+                      </div>
+                      
+                      <!-- رسالة من الطرف الآخر -->
+                      <div class="d-flex mb-3">
+                        <img src="assets/img/avatar-3.webp" alt="صورة العميل" class="rounded-circle align-self-start me-2" width="30" height="30">
+                        <div class="message-bubble-received">
+                          <p class="mb-0">رأيتك، أنا قادمة إليك</p>
+                          <small class="text-muted">3:19 م</small>
+                        </div>
+                      </div>
+                      
+                      <!-- رسالة من الطرف الآخر -->
+                      <div class="d-flex mb-3">
+                        <img src="assets/img/avatar-3.webp" alt="صورة العميل" class="rounded-circle align-self-start me-2" width="30" height="30">
+                        <div class="message-bubble-received">
+                          <p class="mb-0">شكراً جزيلاً لك، سأكون في انتظارك</p>
+                          <small class="text-muted">3:30 م</small>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-white py-3">
+                      <div class="input-group">
+                        <button class="btn btn-outline-secondary" type="button"><i class="bi bi-emoji-smile"></i></button>
+                        <button class="btn btn-outline-secondary" type="button"><i class="bi bi-paperclip"></i></button>
+                        <input type="text" class="form-control" id="messageInput" placeholder="اكتب رسالتك هنا...">
+                        <button class="btn btn-primary" type="button" id="sendButton"><i class="bi bi-send"></i></button>
+                      </div>
+                      <div class="mt-2 text-muted small">
+                        <i class="bi bi-info-circle me-1"></i>
+                        يرجى الالتزام بسياسة الاستخدام الآمن للدردشات. لا تشارك معلومات شخصية أو حساسة.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer py-4 mt-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0">&copy; 2025 رايد. جميع الحقوق محفوظة</p>
+        </div>
+        <div class="col-md-6">
+          <div class="text-md-end">
+            <a href="#" class="text-muted me-3">شروط الاستخدام</a>
+            <a href="#" class="text-muted me-3">سياسة الخصوصية</a>
+            <a href="#" class="text-muted">اتصل بنا</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  
+  <!-- Main JS Files -->
+  <script src="../../../assets/js/main.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // تهيئة المحادثة
+      initChat();
+      
+      // تمرير المحادثة للأسفل عند التحميل
+      const chatBody = document.getElementById('chatBody');
+      if (chatBody) {
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+    });
+    
+    function initChat() {
+      // معالجة النقر على جهات الاتصال
+      const contacts = document.querySelectorAll('.contact-item');
+      contacts.forEach(contact => {
+        contact.addEventListener('click', function(e) {
+          e.preventDefault();
+          // إزالة الفئة النشطة من جميع جهات الاتصال
+          contacts.forEach(c => c.classList.remove('active'));
+          // إضافة الفئة النشطة إلى جهة الاتصال المحددة
+          this.classList.add('active');
+          
+          // تحميل محتوى المحادثة
+          loadConversation(this.getAttribute('data-contact'));
+        });
+      });
+      
+      // معالجة إرسال الرسائل
+      const sendButton = document.getElementById('sendButton');
+      const messageInput = document.getElementById('messageInput');
+      
+      if (sendButton && messageInput) {
+        // إرسال بالنقر على الزر
+        sendButton.addEventListener('click', sendMessage);
+        
+        // إرسال بالضغط على Enter
+        messageInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+      }
+    }
+    
+    function loadConversation(contactId) {
+      console.log(`تحميل محادثة مع جهة الاتصال رقم ${contactId}`);
+      // في التطبيق الفعلي، هنا سيتم استدعاء API لجلب محتوى المحادثة
+      // وتحديث واجهة المستخدم
+    }
+    
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const chatBody = document.getElementById('chatBody');
+      const messageText = messageInput.value.trim();
+      
+      if (messageText && chatBody) {
+        // الحصول على الوقت الحالي
+        const now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'م' : 'ص';
+        hours = hours % 12 || 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        const timeString = `${hours}:${minutes} ${ampm}`;
+        
+        // إنشاء عنصر الرسالة
+        const messageHTML = `
+          <div class="d-flex justify-content-end mb-3">
+            <div class="message-bubble-sent">
+              <p class="mb-0">${messageText}</p>
+              <small class="text-white-50">${timeString}</small>
+            </div>
+          </div>
+        `;
+        
+        // إضافة الرسالة إلى المحادثة
+        chatBody.insertAdjacentHTML('beforeend', messageHTML);
+        
+        // مسح حقل الإدخال
+        messageInput.value = '';
+        
+        // تمرير المحادثة للأسفل
+        chatBody.scrollTop = chatBody.scrollHeight;
+        
+        // في التطبيق الفعلي، هنا سيتم إرسال الرسالة إلى الخادم
+        // sendMessageToServer(messageText);
+      }
+    }
+  </script>
+</body>
+</html>
+logo

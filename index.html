@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>رايد - تطبيق مشاركة الركوب الأفضل</title>
+  <meta name="description" content="تطبيق ويب تقدمي لمشاركة الركوب بسهولة وأمان">
+  <meta name="keywords" content="مشاركة الركوب، تاكسي، نقل، توصيل، تطبيق ويب تقدمي">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#3498db">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body class="index-page rtl">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <!-- يمكنك إضافة شعار هنا -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1 class="sitename">رايد</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">الرئيسية</a></li>
+          <li><a href="#about">عن التطبيق</a></li>
+          <li><a href="#features">المميزات</a></li>
+          <li><a href="#services">خدماتنا</a></li>
+          <li><a href="#pricing">الباقات</a></li>
+          <li><a href="#drivers">كن سائقًا</a></li>
+          <li><a href="#contact">اتصل بنا</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <a class="btn-getstarted" href="#download">حمّل التطبيق</a>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="hero-content" data-aos="fade-up" data-aos-delay="200">
+              <div class="company-badge mb-4">
+                <i class="bi bi-car-front-fill me-2"></i>
+                وصول سريع وآمن إلى وجهتك
+              </div>
+
+              <h1 class="mb-4">
+                احجز رحلتك <br>
+                بضغطة زر <br>
+                <span class="accent-text">في أي وقت وأي مكان</span>
+              </h1>
+
+              <p class="mb-4 mb-md-5">
+                تطبيق مشاركة الركوب الأكثر موثوقية في المنطقة. اطلب سيارتك الآن واستمتع برحلة آمنة ومريحة
+                مع سائقين محترفين وأسعار تنافسية ودفع سهل.
+              </p>
+
+              <div class="hero-buttons">
+                <a href="#download" class="btn btn-primary me-0 me-sm-2 mx-1">تنزيل التطبيق</a>
+                <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="btn btn-link mt-2 mt-sm-0 glightbox">
+                  <i class="bi bi-play-circle me-1"></i>
+                  شاهد كيف يعمل
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="hero-image" data-aos="zoom-out" data-aos-delay="300">
+              <img src="assets/img/illustration-1.webp" alt="تطبيق مشاركة الركوب" class="img-fluid">
+
+              <div class="customers-badge">
+                <div class="customer-avatars">
+                  <img src="assets/img/avatar-1.webp" alt="عميل 1" class="avatar">
+                  <img src="assets/img/avatar-2.webp" alt="عميل 2" class="avatar">
+                  <img src="assets/img/avatar-3.webp" alt="عميل 3" class="avatar">
+                  <img src="assets/img/avatar-4.webp" alt="عميل 4" class="avatar">
+                  <img src="assets/img/avatar-5.webp" alt="عميل 5" class="avatar">
+                  <span class="avatar more">+50</span>
+                </div>
+                <p class="mb-0 mt-2">أكثر من 50,000 مستخدم نشط في منطقتك يستخدمون رايد يوميًا</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row stats-row gy-4 mt-5" data-aos="fade-up" data-aos-delay="500">
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <i class="bi bi-geo-alt"></i>
+              </div>
+              <div class="stat-content">
+                <h4>+100 مدينة</h4>
+                <p class="mb-0">نخدم جميع أنحاء البلاد</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <i class="bi bi-people"></i>
+              </div>
+              <div class="stat-content">
+                <h4>+25 ألف سائق</h4>
+                <p class="mb-0">سائقين محترفين ومدربين</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <i class="bi bi-car-front"></i>
+              </div>
+              <div class="stat-content">
+                <h4>5 ملايين رحلة</h4>
+                <p class="mb-0">تم إكمالها بنجاح</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <i class="bi bi-star"></i>
+              </div>
+              <div class="stat-content">
+                <h4>4.8 تقييم</h4>
+                <p class="mb-0">متوسط تقييم المستخدمين</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4 align-items-center justify-content-between">
+
+          <div class="col-xl-5" data-aos="fade-up" data-aos-delay="200">
+            <span class="about-meta">لماذا رايد؟</span>
+            <h2 class="about-title">التنقل الذكي بأسعار معقولة للجميع</h2>
+            <p class="about-description">نحن نؤمن بأن التنقل يجب أن يكون سهلاً وبأسعار معقولة للجميع. لذلك قمنا بتطوير تطبيق "رايد" ليكون الحل الأمثل لاحتياجات التنقل اليومية بتقنية تطبيقات الويب التقدمية.</p>
+
+            <div class="row feature-list-wrapper">
+              <div class="col-md-6">
+                <ul class="feature-list">
+                  <li><i class="bi bi-check-circle-fill"></i> أسعار شفافة بدون رسوم خفية</li>
+                  <li><i class="bi bi-check-circle-fill"></i> سائقين محترفين ومدققين</li>
+                  <li><i class="bi bi-check-circle-fill"></i> خيارات دفع متعددة وآمنة</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="feature-list">
+                  <li><i class="bi bi-check-circle-fill"></i> خدمة على مدار 24 ساعة</li>
+                  <li><i class="bi bi-check-circle-fill"></i> تتبع الرحلة مباشرة</li>
+                  <li><i class="bi bi-check-circle-fill"></i> دعم فني متاح دائمًا</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="info-wrapper">
+              <div class="row gy-4">
+                <div class="col-lg-5">
+                  <div class="profile d-flex align-items-center gap-3">
+                    <img src="assets/img/avatar-1.webp" alt="المدير التنفيذي" class="profile-image">
+                    <div>
+                      <h4 class="profile-name">أحمد الخالدي</h4>
+                      <p class="profile-position">المدير التنفيذي والمؤسس</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-7">
+                  <div class="contact-info d-flex align-items-center gap-2">
+                    <i class="bi bi-telephone-fill"></i>
+                    <div>
+                      <p class="contact-label">اطلب سيارتك الآن</p>
+                      <p class="contact-number">+966 123 456 789</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="image-wrapper">
+              <div class="images position-relative" data-aos="zoom-out" data-aos-delay="400">
+                <img src="assets/img/about-5.webp" alt="تجربة ركوب" class="img-fluid main-image rounded-4">
+                <img src="assets/img/about-2.webp" alt="واجهة التطبيق" class="img-fluid small-image rounded-4">
+              </div>
+              <div class="experience-badge floating">
+                <h3>5+ <span>سنوات</span></h3>
+                <p>من الخبرة في خدمات التنقل</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /About Section -->
+
+    <!-- Features Section -->
+    <section id="features" class="features section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>مميزات التطبيق</h2>
+        <p>اكتشف المميزات المتطورة التي تجعل رايد الخيار الأمثل للتنقل اليومي</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="d-flex justify-content-center">
+
+          <ul class="nav nav-tabs" data-aos="fade-up" data-aos-delay="100">
+
+            <li class="nav-item">
+              <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1">
+                <h4>للركاب</h4>
+              </a>
+            </li><!-- End tab nav item -->
+
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2">
+                <h4>للسائقين</h4>
+              </a><!-- End tab nav item -->
+
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3">
+                <h4>للشركات</h4>
+              </a>
+            </li><!-- End tab nav item -->
+
+          </ul>
+
+        </div>
+
+        <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+
+          <div class="tab-pane fade active show" id="features-tab-1">
+            <div class="row">
+              <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
+                <h3>ميزات للركاب تجعل رحلتك أسهل</h3>
+                <p class="fst-italic">
+                  استمتع بتجربة تنقل سلسة مع ميزات مصممة خصيصًا لراحتك وأمانك.
+                </p>
+                <ul>
+                  <li><i class="bi bi-check2-all"></i> <span>حجز رحلات فوري أو مجدول مسبقًا لرحلات متكررة.</span></li>
+                  <li><i class="bi bi-check2-all"></i> <span>تتبع الرحلة والسائق في الوقت الحقيقي على الخريطة.</span></li>
+                  <li><i class="bi bi-check2-all"></i> <span>مشاركة تفاصيل الرحلة مع الأصدقاء والعائلة لمزيد من الأمان، مع خيارات دفع متعددة تشمل النقدي والبطاقات والمحافظ الإلكترونية.</span></li>
+                </ul>
+              </div>
+              <div class="col-lg-6 order-1 order-lg-2 text-center">
+                <img src="assets/img/features-illustration-1.webp" alt="ميزات الركاب" class="img-fluid">
+              </div>
+            </div>
+          </div><!-- End tab content item -->
+
+          <div class="tab-pane fade" id="features-tab-2">
+            <div class="row">
+              <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
+                <h3>ميزات للسائقين لزيادة دخلك</h3>
+                <p class="fst-italic">
+                  انضم إلى فريق سائقي رايد واستفد من منصتنا المتطورة لتحقيق دخل إضافي أو عمل بدوام كامل.
+                </p>
+                <ul>
+                  <li><i class="bi bi-check2-all"></i> <span>تلقي طلبات رحلات قريبة مع تقديرات واضحة للمسافة والدخل.</span></li>
+                  <li><i class="bi bi-check2-all"></i> <span>جدولة أوقات العمل بمرونة كاملة تناسب ظروفك.</span></li>
+                  <li><i class="bi bi-check2-all"></i> <span>دفع سريع وشفاف أسبوعيًا مباشرة إلى حسابك المصرفي.</span></li>
+                  <li><i class="bi bi-check2-all"></i> <span>الوصول إلى برامج خصومات وتأمين صحي للسائقين النشطين، مع دعم فني متخصص للسائقين على مدار الساعة.</span></li>
+                </ul>
+              </div>
+              <div class="col-lg-6 order-1 order-lg-2 text-center">
+                <img src="assets/img/features-illustration-2.webp" alt="ميزات السائقين" class="img-fluid">
+              </div>
+            </div>
+          </div><!-- End tab content item -->
+
+          <div class="tab-pane fade" id="features-tab-3">
+            <div class="row">
+              <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
+                <h3>حلول للشركات والمؤسسات</h3>
+                <ul>
+                  <li><i class="bi bi-check2-all"></i> <span>حسابات شركات مع إدارة مركزية وتقارير مفصلة.</span></li>
+                  <li><i class="bi bi-check2-all"></i> <span>حلول نقل للموظفين بميزانيات محددة وسياسات مخصصة.</span></li>
+                  <li><i class="bi bi-check2-all"></i> <span>فواتير شهرية مجمعة مع خيارات دفع مؤجل للشركات المعتمدة.</span></li>
+                </ul>
+                <p class="fst-italic">
+                  نقدم حلول نقل مخصصة للشركات بكافة أحجامها لإدارة تنقلات الموظفين والضيوف بكفاءة وشفافية مالية.
+                </p>
+              </div>
+              <div class="col-lg-6 order-1 order-lg-2 text-center">
+                <img src="assets/img/features-illustration-3.webp" alt="حلول الشركات" class="img-fluid">
+              </div>
+            </div>
+          </div><!-- End tab content item -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Features Section -->
+
+    <!-- Features Cards Section -->
+    <section id="features-cards" class="features-cards section">
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+            <div class="feature-box orange">
+              <i class="bi bi-shield-check"></i>
+              <h4>الأمان أولاً</h4>
+              <p>سائقين مدققين أمنيًا، تتبع مباشر للرحلة، ومشاركة تفاصيل الرحلة مع الأحباء</p>
+            </div>
+          </div><!-- End Feature Box-->
+
+          <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+            <div class="feature-box blue">
+              <i class="bi bi-cash-coin"></i>
+              <h4>أسعار عادلة</h4>
+              <p>شفافية كاملة في التسعير، بدون رسوم خفية أو زيادات مفاجئة في الأسعار</p>
+            </div>
+          </div><!-- End Feature Box-->
+
+          <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+            <div class="feature-box green">
+              <i class="bi bi-alarm"></i>
+              <h4>سرعة الوصول</h4>
+              <p>وصول السائق في وقت قياسي بفضل خوارزميات التوجيه المتطورة</p>
+            </div>
+          </div><!-- End Feature Box-->
+
+          <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+            <div class="feature-box red">
+              <i class="bi bi-phone"></i>
+              <h4>تطبيق ويب تقدمي</h4>
+              <p>استخدم التطبيق مباشرة من المتصفح دون الحاجة للتنزيل، مع إمكانية العمل بدون إنترنت</p>
+            </div>
+          </div><!-- End Feature Box-->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Features Cards Section -->
+
+    <!-- App Features Section -->
+    <section id="features-2" class="features-2 section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row align-items-center">
+
+          <div class="col-lg-4">
+
+            <div class="feature-item text-end mb-5" data-aos="fade-right" data-aos-delay="200">
+              <div class="d-flex align-items-center justify-content-end gap-4">
+                <div class="feature-content">
+                  <h3>يعمل بدون إنترنت</h3>
+                  <p>استمر في استخدام التطبيق حتى عند انقطاع الإنترنت، مع إمكانية حجز الرحلات وعرض الرحلات السابقة.</p>
+                </div>
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-wifi-off"></i>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+            <div class="feature-item text-end mb-5" data-aos="fade-right" data-aos-delay="300">
+              <div class="d-flex align-items-center justify-content-end gap-4">
+                <div class="feature-content">
+                  <h3>مشاركة الموقع</h3>
+                  <p>شارك موقعك الحالي بسهولة مع الآخرين لطلب توصيلة لك، أو تابع وصول أحبائك في الوقت الحقيقي.</p>
+                </div>
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-share"></i>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+            <div class="feature-item text-end" data-aos="fade-right" data-aos-delay="400">
+              <div class="d-flex align-items-center justify-content-end gap-4">
+                <div class="feature-content">
+                  <h3>إشعارات فورية</h3>
+                  <p>احصل على إشعارات فورية عند اقتراب السائق، وتحديثات الرحلة، وإيصالات الدفع مباشرة على جهازك.</p>
+                </div>
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-bell"></i>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+          </div>
+
+          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+            <div class="phone-mockup text-center">
+              <img src="assets/img/phone-app-screen.webp" alt="تطبيق رايد" class="img-fluid">
+            </div>
+          </div><!-- End Phone Mockup -->
+
+          <div class="col-lg-4">
+
+            <div class="feature-item mb-5" data-aos="fade-left" data-aos-delay="200">
+              <div class="d-flex align-items-center gap-4">
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-geo-alt"></i>
+                </div>
+                <div class="feature-content">
+                  <h3>خرائط دقيقة</h3>
+                  <p>خرائط عالية الدقة مع تحديد تلقائي للعناوين والمواقع المهمة والتنبؤ بوجهاتك المتكررة.</p>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+            <div class="feature-item mb-5" data-aos="fade-left" data-aos-delay="300">
+              <div class="d-flex align-items-center gap-4">
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="feature-content">
+                  <h3>جدولة الرحلات</h3>
+                  <p>احجز رحلاتك مسبقًا للمواعيد المهمة أو الرحلات المتكررة وتأكد من توفر سيارة في الوقت المناسب.</p>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+            <div class="feature-item" data-aos="fade-left" data-aos-delay="400">
+              <div class="d-flex align-items-center gap-4">
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-currency-exchange"></i>
+                </div>
+                <div class="feature-content">
+                  <h3>خيارات دفع متعددة</h3>
+                  <p>ادفع بالطريقة التي تناسبك: نقدًا، بطاقات ائتمان، محافظ إلكترونية، أو رصيد التطبيق.</p>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /App Features Section -->
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>خيارات الرحلات والباقات</h2>
+        <p>اختر نوع الرحلة المناسب لاحتياجاتك مع باقات توفر لك المزيد من المزايا والخصومات</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row g-4 justify-content-center">
+
+          <!-- Basic Plan -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="pricing-card">
+              <h3>رايد اقتصادي</h3>
+              <div class="price">
+                <span class="amount">اقتصادي</span>
+                <span class="period">الخيار الأمثل للتنقل اليومي</span>
+              </div>
+              <p class="description">سيارات مريحة لرحلات يومية بأسعار معقولة، مثالية للذهاب للعمل أو التسوق.</p>
+
+              <h4>المميزات:</h4>
+              <ul class="features-list">
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  سيارات اقتصادية مكيفة
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  4 مقاعد للركاب
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  أسعار تنافسية
+                </li>
+              </ul>
+
+              <a href="#" class="btn btn-primary">
+                احجز الآن
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Standard Plan -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="pricing-card popular">
+              <div class="popular-badge">الأكثر طلبًا</div>
+              <h3>رايد بريميوم</h3>
+              <div class="price">
+                <span class="amount">مميز</span>
+                <span class="period">للرحلات الخاصة والمناسبات</span>
+              </div>
+              <p class="description">سيارات فاخرة مع سائقين محترفين للمناسبات الخاصة والاجتماعات العملية.</p>
+
+              <h4>المميزات:</h4>
+              <ul class="features-list">
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  سيارات فاخرة وحديثة
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  سائقين بخبرة عالية
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  مياه وخدمات إضافية
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  أولوية في خدمة العملاء
+                </li>
+              </ul>
+
+              <a href="#" class="btn btn-light">
+                احجز الآن
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Premium Plan -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="pricing-card">
+              <h3>رايد عائلي</h3>
+              <div class="price">
+                <span class="amount">عائلي</span>
+                <span class="period">للمجموعات والعائلات</span>
+              </div>
+              <p class="description">سيارات واسعة للعائلات والمجموعات مع مساحة إضافية للأمتعة والحقائب.</p>
+
+              <h4>المميزات:</h4>
+              <ul class="features-list">
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  سيارات SUV أو فان
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  حتى 7 ركاب
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  مساحة واسعة للأمتعة
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  مقاعد أطفال عند الطلب
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  مناسب للرحلات الطويلة
+                </li>
+              </ul>
+
+              <a href="#" class="btn btn-primary">
+                احجز الآن
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Pricing Section -->
+
+    <!-- Download App Section -->
+    <section id="download" class="call-to-action section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row content justify-content-center align-items-center position-relative">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="display-4 mb-4">احصل على تطبيق رايد الآن</h2>
+            <p class="mb-4">استخدم تطبيق رايد مباشرة من متصفحك أو قم بتثبيته على هاتفك للاستمتاع بتجربة كاملة</p>
+            
+            <div class="download-buttons">
+              <a href="#" class="btn btn-cta me-2 mb-2">
+                <i class="bi bi-google-play me-2"></i> Google Play
+              </a>
+              <a href="#" class="btn btn-cta me-2 mb-2">
+                <i class="bi bi-apple me-2"></i> App Store
+              </a>
+              <a href="#" class="btn btn-outline-light mb-2">
+                <i class="bi bi-browser-chrome me-2"></i> استخدم في المتصفح
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Download App Section -->
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>آراء العملاء</h2>
+        <p>اقرأ تجارب حقيقية من مستخدمي تطبيق رايد في مختلف أنحاء البلاد</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row g-5">
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="testimonial-item">
+              <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
+              <h3>سارة الأحمد</h3>
+              <h4>مستخدمة منتظمة</h4>
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                <i class="bi bi-quote quote-icon-left"></i>
+                <span>أستخدم رايد يوميًا للذهاب للعمل، والتطبيق رائع من ناحية الدقة والالتزام بالمواعيد. السائقين محترفين والأسعار معقولة جدًا مقارنة بالخدمات الأخرى.</span>
+                <i class="bi bi-quote quote-icon-right"></i>
+              </p>
+            </div>
+          </div><!-- End testimonial item -->
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="testimonial-item">
+              <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
+              <h3>محمد العتيبي</h3>
+              <h4>رجل أعمال</h4>
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                <i class="bi bi-quote quote-icon-left"></i>
+                <span>كرجل أعمال، أحتاج دائمًا للتنقل بين الاجتماعات بسرعة وراحة. رايد بريميوم خيار ممتاز - سيارات فاخرة، سائقين محترفين، والأهم الالتزام بالمواعيد. يوفر علي الكثير من الوقت والجهد.</span>
+                <i class="bi bi-quote quote-icon-right"></i>
+              </p>
+            </div>
+          </div><!-- End testimonial item -->
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="testimonial-item">
+              <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
+              <h3>نورة القحطاني</h3>
+              <h4>أم لثلاثة أطفال</h4>
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                <i class="bi bi-quote quote-icon-left"></i>
+                <span>رايد عائلي هو الحل الأمثل للعائلات! أقدر توفر مقاعد الأطفال والمساحة الواسعة للأمتعة. ما يميز الخدمة أيضًا هو إمكانية مشاركة موقع الرحلة مع زوجي لمتابعة تنقلات الأطفال من المدرسة.</span>
+                <i class="bi bi-quote quote-icon-right"></i>
+              </p>
+            </div>
+          </div><!-- End testimonial item -->
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="testimonial-item">
+              <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
+              <h3>خالد المالكي</h3>
+              <h4>سائق في رايد</h4>
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                <i class="bi bi-quote quote-icon-left"></i>
+                <span>العمل كسائق في رايد وفر لي دخلاً ممتازًا مع مرونة كاملة في أوقات العمل. التطبيق سهل الاستخدام، والدفع أسبوعي ومنتظم. الدعم الفني ممتاز ويستجيب لأي استفسار بسرعة.</span>
+                <i class="bi bi-quote quote-icon-right"></i>
+              </p>
+            </div>
+          </div><!-- End testimonial item -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Testimonials Section -->
+
+    <!-- Drivers Section -->
+    <section id="drivers" class="call-to-action-2 section dark-background">
+      <div class="container">
+        <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+          <div class="col-xl-10">
+            <div class="text-center">
+              <h3>انضم إلى فريق سائقي رايد</h3>
+              <p>هل تبحث عن فرصة عمل مرنة بدخل جيد؟ انضم إلى فريق سائقي رايد اليوم واستفد من مزايا العمل معنا: مرونة في أوقات العمل، دخل أسبوعي مضمون، دعم فني متخصص، وفرص لزيادة دخلك مع برامج المكافآت.</p>
+              <a class="cta-btn" href="#">سجل كسائق الآن</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Drivers Section -->
+
+    <!-- Faq Section -->
+    <section class="faq-9 faq section light-background" id="faq">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-5" data-aos="fade-up">
+            <h2 class="faq-title">أسئلة شائعة</h2>
+            <p class="faq-description">إليك إجابات على الأسئلة الأكثر شيوعًا حول خدمات تطبيق رايد</p>
+          </div>
+
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="300">
+            <div class="faq-container">
+              <div class="faq-item faq-active">
+                <h3>كيف يمكنني طلب رحلة عبر تطبيق رايد؟</h3>
+                <div class="faq-content">
+                  <p>يمكنك طلب رحلة بسهولة عن طريق فتح التطبيق، تحديد وجهتك، اختيار نوع السيارة المناسب لك، ثم النقر على "احجز الآن". سيصلك إشعار عند قبول السائق للرحلة مع تفاصيل وصوله.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>ما هي طرق الدفع المتاحة في التطبيق؟</h3>
+                <div class="faq-content">
+                  <p>يتيح تطبيق رايد العديد من طرق الدفع: نقدًا مباشرة للسائق، بطاقات الائتمان، المحافظ الإلكترونية مثل Apple Pay وGoogle Pay، بالإضافة إلى إمكانية شحن رصيد في التطبيق واستخدامه للرحلات.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>هل يمكنني جدولة رحلة مسبقًا؟</h3>
+                <div class="faq-content">
+                  <p>نعم، يمكنك جدولة رحلة مسبقًا لموعد يصل إلى أسبوع من الآن. ببساطة اختر "جدولة رحلة" بدلاً من "احجز الآن" وحدد التاريخ والوقت المناسبين. سنرسل لك تذكيرًا قبل الموعد بساعة.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>كيف يتم احتساب سعر الرحلة؟</h3>
+                <div class="faq-content">
+                  <p>يعتمد سعر الرحلة على عدة عوامل: المسافة، الوقت المستغرق، نوع السيارة، والطلب الحالي في منطقتك. ستظهر تقديرات السعر قبل تأكيد الرحلة، وفي معظم الحالات لن يتغير السعر بعد التأكيد إلا في حالة تغيير الوجهة أو إضافة محطات.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>كيف يمكنني التسجيل كسائق في رايد؟</h3>
+                <div class="faq-content">
+                  <p>للتسجيل كسائق، قم بزيارة صفحة "انضم كسائق" وأكمل النموذج المطلوب. ستحتاج لتقديم رخصة قيادة سارية، تأمين للمركبة، صورة شخصية، وبيانات السيارة. بعد التحقق من بياناتك، سيتم دعوتك لجلسة تدريبية قصيرة قبل بدء استقبال الطلبات.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>هل يمكنني استخدام التطبيق بدون تنزيله؟</h3>
+                <div class="faq-content">
+                  <p>نعم! تطبيق رايد هو تطبيق ويب تقدمي (PWA)، يمكنك استخدامه مباشرة من متصفح هاتفك عبر زيارة موقعنا ride.app. للحصول على أفضل تجربة، يمكنك إضافته لشاشة هاتفك الرئيسية ليعمل كتطبيق كامل مع إمكانية العمل بدون إنترنت.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Faq Section -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section light-background">
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>اتصل بنا</h2>
+        <p>نحن هنا للإجابة على استفساراتك ومساعدتك في أي وقت</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row g-4 g-lg-5">
+          <div class="col-lg-5">
+            <div class="info-box" data-aos="fade-up" data-aos-delay="200">
+              <h3>معلومات الاتصال</h3>
+              <p>فريق خدمة العملاء متاح على مدار الساعة لمساعدتك والرد على استفساراتك.</p>
+
+              <div class="info-item" data-aos="fade-up" data-aos-delay="300">
+                <div class="icon-box">
+                  <i class="bi bi-geo-alt"></i>
+                </div>
+                <div class="content">
+                  <h4>المقر الرئيسي</h4>
+                  <p>طريق الملك فهد، برج المملكة</p>
+                  <p>الرياض، المملكة العربية السعودية</p>
+                </div>
+              </div>
+
+              <div class="info-item" data-aos="fade-up" data-aos-delay="400">
+                <div class="icon-box">
+                  <i class="bi bi-telephone"></i>
+                </div>
+                <div class="content">
+                  <h4>اتصل بنا</h4>
+                  <p>920012345 (من داخل المملكة)</p>
+                  <p>+966 55 123 4567 (من خارج المملكة)</p>
+                </div>
+              </div>
+
+              <div class="info-item" data-aos="fade-up" data-aos-delay="500">
+                <div class="icon-box">
+                  <i class="bi bi-envelope"></i>
+                </div>
+                <div class="content">
+                  <h4>البريد الإلكتروني</h4>
+                  <p>info@ride.app</p>
+                  <p>support@ride.app</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="contact-form" data-aos="fade-up" data-aos-delay="300">
+              <h3>تواصل معنا</h3>
+              <p>نرحب باستفساراتك واقتراحاتك. يرجى ملء النموذج أدناه وسنرد عليك في أقرب وقت ممكن.</p>
+
+              <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                <div class="row gy-4">
+                  <div class="col-md-6">
+                    <input type="text" name="name" class="form-control" placeholder="الاسم" required>
+                  </div>
+                  <div class="col-md-6">
+                    <input type="email" class="form-control" name="email" placeholder="البريد الإلكتروني" required>
+                  </div>
+                  <div class="col-12">
+                    <input type="text" class="form-control" name="subject" placeholder="الموضوع" required>
+                  </div>
+                  <div class="col-12">
+                    <textarea class="form-control" name="message" rows="6" placeholder="الرسالة" required></textarea>
+                  </div>
+                  <div class="col-12 text-center">
+                    <div class="loading">جاري التحميل</div>
+                    <div class="error-message"></div>
+                    <div class="sent-message">تم إرسال رسالتك بنجاح. شكرًا لك!</div>
+                    <button type="submit" class="btn">إرسال الرسالة</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Contact Section -->
+
+  </main>
+
+  <footer id="footer" class="footer">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span class="sitename">رايد</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>طريق الملك فهد، برج المملكة</p>
+            <p>الرياض، المملكة العربية السعودية</p>
+            <p class="mt-3"><strong>الهاتف:</strong> <span>920012345</span></p>
+            <p><strong>البريد الإلكتروني:</strong> <span>info@ride.app</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>روابط سريعة</h4>
+          <ul>
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">عن التطبيق</a></li>
+            <li><a href="#">خدماتنا</a></li>
+            <li><a href="#">شروط الخدمة</a></li>
+            <li><a href="#">سياسة الخصوصية</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>خدماتنا</h4>
+          <ul>
+            <li><a href="#">رايد اقتصادي</a></li>
+            <li><a href="#">رايد بريميوم</a></li>
+            <li><a href="#">رايد عائلي</a></li>
+            <li><a href="#">حلول الشركات</a></li>
+            <li><a href="#">التنقل للمناسبات</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>للسائقين</h4>
+          <ul>
+            <li><a href="#">سجل كسائق</a></li>
+            <li><a href="#">المتطلبات</a></li>
+            <li><a href="#">التدريب</a></li>
+            <li><a href="#">الدعم الفني</a></li>
+            <li><a href="#">الحوافز والمكافآت</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>تحميل التطبيق</h4>
+          <ul></ul>
+            <li><a href="#">Google Play</a></li>
+            <li><a href="#">App Store</a></li>
+            <li><a href="#">إصدار الويب</a></li>
+            <li><a href="#">تحديثات التطبيق</a></li>
+            <li><a href="#">المساعدة والدعم</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4"></div>
+      <p>© <span>جميع الحقوق محفوظة</span> <strong class="px-1 sitename">رايد</strong> <span>2025</span></p>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker not registered', err));
+      });
+    }
+  </script>
+</body>
+
+</html>

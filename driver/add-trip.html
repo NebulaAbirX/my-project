@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>رايد - إضافة رحلة جديدة</title>
+  <meta name="description" content="إضافة رحلة جديدة للعرض في تطبيق رايد لمشاركة الركوب">
+  <meta name="keywords" content="مشاركة الركوب، تاكسي، سائق، دخل إضافي، تطبيق ويب تقدمي">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="assets/css/driver-dashboard.css" rel="stylesheet">
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#3498db">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    /* نمط صفحة إضافة رحلة */
+    body {
+      background-color: #f8f9fa;
+    }
+    
+    .trip-form-container {
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    
+    .trip-form-container header {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .trip-form-container header:after {
+      content: '';
+      position: absolute;
+      width: 80px;
+      height: 3px;
+      background-color: #3498db;
+      bottom: 0;
+      right: 50%;
+      margin-right: -40px;
+    }
+    
+    /* Multi-step form styles */
+    .form-step {
+      display: none;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .step-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #e9ecef;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .step.active .step-circle {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .step-text {
+      font-size: 14px;
+      color: #6c757d;
+      text-align: center;
+    }
+    
+    .step.active .step-text {
+      color: #3498db;
+      font-weight: 600;
+    }
+    
+    /* Form fields styles */
+    .form .column {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    @media (max-width: 576px) {
+      .form .column {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+    
+    .input-box {
+      margin-bottom: 15px;
+    }
+    
+    .input-box label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+      display: block;
+    }
+    
+    .input-box input, 
+    .input-box select, 
+    .input-box textarea {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .input-box input:focus, 
+    .input-box select:focus, 
+    .input-box textarea:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      outline: none;
+    }
+    
+    .required {
+      color: #ff4757;
+      margin-right: 3px;
+    }
+    
+    .error-message {
+      color: #ff4757;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+    }
+    
+    .is-invalid {
+      border-color: #ff4757 !important;
+    }
+    
+    /* Gender options (radio buttons) */
+    .gender-option {
+      display: flex;
+      gap: 20px;
+      margin-top: 5px;
+    }
+    
+    .gender {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .gender input[type="radio"] {
+      width: auto;
+    }
+    
+    /* Form navigation */
+    .form-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+    
+    .btn-prev, .btn-next, .btn-submit {
+      padding: 10px 25px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-prev {
+      background-color: #f1f2f6;
+      color: #333;
+    }
+    
+    .btn-next, .btn-submit {
+      background-color: #3498db;
+      color: #fff;
+    }
+    
+    .btn-prev:hover {
+      background-color: #dfe4ea;
+    }
+    
+    .btn-next:hover, .btn-submit:hover {
+      background-color: #2980b9;
+    }
+    
+    /* Features grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-item:hover {
+      background-color: #e9ecef;
+    }
+    
+    .feature-item input[type="checkbox"] {
+      margin-right: 10px;
+      width: auto;
+    }
+    
+    .feature-item i {
+      margin-right: 5px;
+      color: #3498db;
+    }
+    
+    /* Trip summary */
+    .trip-summary {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    
+    .summary-item {
+      display: flex;
+      margin-bottom: 8px;
+    }
+    
+    .summary-label {
+      font-weight: 600;
+      width: 150px;
+    }
+    
+    /* Contact details */
+    .contact-details {
+      margin-top: 10px;
+    }
+    
+    .checkbox-inline {
+      margin-top: 5px;
+    }
+    
+    .communication-prefs {
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .time-range {
+      display: flex;
+      gap: 15px;
+    }
+  </style>
+</head>
+
+<body class="rtl">
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <h1 class="sitename">رايد</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="test.html">لوحة التحكم</a></li>
+          <li><a href="test.html#trips">الرحلات</a></li>
+          <li><a href="test.html#earnings">الأرباح</a></li>
+          <li><a href="test.html#profile">الملف الشخصي</a></li>
+          <li><a href="test.html#settings">الإعدادات</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="dropdown">
+          <button class="btn btn-link position-relative text-dark p-0" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell-fill fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              3
+              <span class="visually-hidden">إشعارات غير مقروءة</span>
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+            <li><h6 class="dropdown-header">الإشعارات</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-center" href="#">عرض جميع الإشعارات</a></li>
+          </ul>
+        </div>
+        <img src="assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle" width="40" height="40">
+      </div>
+    </div>
+  </header>
+
+  <main class="main" style="margin-top: 90px; padding-top: 20px;">
+    <div class="container">
+      <div class="trip-form-container">
+        <header>إضافة رحلة جديدة</header>
+        
+        <!-- Step Indicators -->
+        <div class="step-indicator">
+          <div class="step active" data-step="1">
+            <div class="step-circle">1</div>
+            <div class="step-text">تفاصيل الرحلة</div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="step-circle">2</div>
+            <div class="step-text">معلومات السيارة</div>
+          </div>
+          <div class="step" data-step="3">
+            <div class="step-circle">3</div>
+            <div class="step-text">تأكيد الرحلة</div>
+          </div>
+        </div>
+
+        <!-- Multi-step Form -->
+        <form id="tripForm" action="#" class="form" novalidate>
+          <!-- Step 1: Trip Details -->
+          <div class="form-step active" data-step="1">
+            <div class="column">
+              <div class="input-box">
+                <label for="from-location">نقطة الانطلاق<span class="required">*</span></label>
+                <input type="text" id="from-location" placeholder="المدينة / الحي" required />
+                <small class="error-message"></small>
+              </div>
+              
+              <div class="input-box">
+                <label for="to-location">الوجهة<span class="required">*</span></label>
+                <input type="text" id="to-location" placeholder="المدينة / الحي" required />
+                <small class="error-message"></small>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="input-box">
+                <label for="trip-date">تاريخ الرحلة<span class="required">*</span></label>
+                <input type="date" id="trip-date" required />
+                <small class="error-message"></small>
+              </div>
+              
+              <div class="input-box">
+                <label for="trip-time">وقت الانطلاق<span class="required">*</span></label>
+                <input type="time" id="trip-time" required />
+                <small class="error-message"></small>
+              </div>
+            </div>
+
+            <div class="input-box">
+              <label for="trip-description">وصف الرحلة</label>
+              <textarea id="trip-description" placeholder="أضف تفاصيل إضافية عن الرحلة..." rows="3"></textarea>
+            </div>
+
+            <div class="input-box">
+              <label>نوع الرحلة<span class="required">*</span></label>
+              <div class="gender-option">
+                <div class="gender">
+                  <input type="radio" id="one-way" name="trip-type" value="one-way" checked />
+                  <label for="one-way">رحلة ذهاب فقط</label>
+                </div>
+                <div class="gender">
+                  <input type="radio" id="round-trip" name="trip-type" value="round-trip" />
+                  <label for="round-trip">رحلة ذهاب وعودة</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-navigation">
+              <div></div>
+              <button type="button" class="btn-next">التالي <i class="bi bi-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Step 2: Vehicle Information -->
+          <div class="form-step" data-step="2">
+            <div class="column">
+              <div class="input-box">
+                <label for="car-model">نوع وموديل السيارة<span class="required">*</span></label>
+                <input type="text" id="car-model" placeholder="مثال: تويوتا كامري 2022" required />
+                <small class="error-message"></small>
+              </div>
+              
+              <div class="input-box">
+                <label for="car-color">لون السيارة<span class="required">*</span></label>
+                <input type="text" id="car-color" placeholder="مثال: أبيض" required />
+                <small class="error-message"></small>
+              </div>
+            </div>
+
+            <div class="input-box">
+              <label for="car-plate">رقم لوحة السيارة<span class="required">*</span></label>
+              <input type="text" id="car-plate" placeholder="أدخل رقم لوحة السيارة" required />
+              <small class="error-message"></small>
+            </div>
+
+            <div class="input-box">
+              <label for="car-seats">عدد المقاعد المتاحة<span class="required">*</span></label>
+              <select id="car-seats" required>
+                <option value="" hidden>اختر عدد المقاعد</option>
+                <option value="1">1 مقعد</option>
+                <option value="2">2 مقاعد</option>
+                <option value="3">3 مقاعد</option>
+                <option value="4">4 مقاعد</option>
+                <option value="5">5 مقاعد</option>
+                <option value="6">6 مقاعد</option>
+              </select>
+              <small class="error-message"></small>
+            </div>
+
+            <div class="input-box">
+              <label>مواصفات اضافية</label>
+              <div class="features-grid">
+                <div class="feature-item">
+                  <input type="checkbox" id="ac" />
+                  <label for="ac"><i class="bi bi-snow"></i>تكييف</label>
+                </div>
+                <div class="feature-item">
+                  <input type="checkbox" id="wifi" />
+                  <label for="wifi"><i class="bi bi-wifi"></i>واي فاي</label>
+                </div>
+                <div class="feature-item">
+                  <input type="checkbox" id="luggage" />
+                  <label for="luggage"><i class="bi bi-briefcase"></i>مساحة للأمتعة</label>
+                </div>
+                <div class="feature-item">
+                  <input type="checkbox" id="child-seat" />
+                  <label for="child-seat"><i class="bi bi-person-arms-up"></i>مقعد أطفال</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-box">
+              <label>قواعد الرحلة</label>
+              <div class="features-grid">
+                <div class="feature-item">
+                  <input type="checkbox" id="smoke-free" />
+                  <label for="smoke-free"><i class="bi bi-slash-circle"></i>ممنوع التدخين</label>
+                </div>
+                <div class="feature-item">
+                  <input type="checkbox" id="pets-allowed" />
+                  <label for="pets-allowed"><i class="bi bi-heart"></i>مسموح بالحيوانات الأليفة</label>
+                </div>
+                <div class="feature-item">
+                  <input type="checkbox" id="music-allowed" />
+                  <label for="music-allowed"><i class="bi bi-music-note-beamed"></i>مسموح بالموسيقى</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" class="btn-prev"><i class="bi bi-arrow-left"></i> السابق</button>
+              <button type="button" class="btn-next">التالي <i class="bi bi-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Step 3: Confirmation -->
+          <div class="form-step" data-step="3">
+            <div class="input-box">
+              <label>ملخص الرحلة</label>
+              <div class="trip-summary">
+                <div class="summary-item">
+                  <span class="summary-label">نقطة الانطلاق:</span>
+                  <span class="summary-value" id="summary-from"></span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">الوجهة:</span>
+                  <span class="summary-value" id="summary-to"></span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">تاريخ ووقت الرحلة:</span>
+                  <span class="summary-value" id="summary-datetime"></span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">نوع الرحلة:</span>
+                  <span class="summary-value" id="summary-trip-type"></span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">السيارة:</span>
+                  <span class="summary-value" id="summary-car"></span>
+                </div>
+                <div class="summary-item">
+                  <span class="summary-label">عدد المقاعد المتاحة:</span>
+                  <span class="summary-value" id="summary-seats"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-box">
+              <label>تفاصيل الاتصال</label>
+              <div class="contact-details">
+                <div class="column">
+                  <div class="input-box">
+                    <label for="driver-phone">رقم الجوال<span class="required">*</span></label>
+                    <input type="tel" id="driver-phone" 
+                           placeholder="05xxxxxxxx" 
+                           pattern="[0-9]{10}"
+                           required />
+                    <small class="error-message"></small>
+                  </div>
+                  
+                  <div class="input-box">
+                    <label for="whatsapp-number">رقم الواتساب</label>
+                    <input type="tel" id="whatsapp-number" 
+                           placeholder="05xxxxxxxx" 
+                           pattern="[0-9]{10}" />
+                    <div class="checkbox-inline">
+                      <input type="checkbox" id="same-as-phone" />
+                      <label for="same-as-phone">نفس رقم الجوال</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="communication-prefs">
+                  <label>طريقة التواصل المفضلة</label>
+                  <div class="features-grid">
+                    <div class="feature-item">
+                      <input type="checkbox" id="prefer-call" name="comm-pref" />
+                      <label for="prefer-call">
+                        <i class="bi bi-telephone"></i>اتصال
+                      </label>
+                    </div>
+                    <div class="feature-item">
+                      <input type="checkbox" id="prefer-whatsapp" name="comm-pref" />
+                      <label for="prefer-whatsapp">
+                        <i class="bi bi-whatsapp"></i>واتساب
+                      </label>
+                    </div>
+                    <div class="feature-item">
+                      <input type="checkbox" id="prefer-sms" name="comm-pref" />
+                      <label for="prefer-sms">
+                        <i class="bi bi-chat-text"></i>رسائل نصية
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="contact-hours">
+                  <label>أوقات التواصل المفضلة</label>
+                  <div class="time-range">
+                    <div class="input-box">
+                      <label for="contact-from">من</label>
+                      <input type="time" id="contact-from" />
+                    </div>
+                    <div class="input-box">
+                      <label for="contact-to">إلى</label>
+                      <input type="time" id="contact-to" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-box">
+              <label for="additional-notes">ملاحظات إضافية</label>
+              <textarea id="additional-notes" placeholder="أي معلومات إضافية تود مشاركتها مع الركاب..." rows="3"></textarea>
+            </div>
+
+            <div class="input-box">
+              <div class="gender-option">
+                <div class="gender">
+                  <input type="checkbox" id="terms-agree" required />
+                  <label for="terms-agree">أوافق على شروط وأحكام نشر الرحلات<span class="required">*</span></label>
+                </div>
+              </div>
+              <small class="error-message"></small>
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" class="btn-prev"><i class="bi bi-arrow-left"></i> السابق</button>
+              <button type="submit" class="btn-submit">نشر الرحلة</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer py-4 mt-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0">&copy; 2025 رايد. جميع الحقوق محفوظة</p>
+        </div>
+        <div class="col-md-6">
+          <div class="text-md-end">
+            <a href="#" class="text-muted me-3">شروط الاستخدام</a>
+            <a href="#" class="text-muted me-3">سياسة الخصوصية</a>
+            <a href="#" class="text-muted">اتصل بنا</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <!-- Form functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Multi-step form navigation
+      const formSteps = document.querySelectorAll('.form-step');
+      const stepIndicators = document.querySelectorAll('.step');
+      const prevButtons = document.querySelectorAll('.btn-prev');
+      const nextButtons = document.querySelectorAll('.btn-next');
+      
+      // Handle "Next" button clicks
+      nextButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const currentStep = parseInt(button.closest('.form-step').dataset.step);
+          const nextStep = currentStep + 1;
+          
+          // Validate current step before proceeding
+          if (validateStep(currentStep)) {
+            goToStep(nextStep);
+            updateSummary();
+          }
+        });
+      });
+      
+      // Handle "Previous" button clicks
+      prevButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const currentStep = parseInt(button.closest('.form-step').dataset.step);
+          const prevStep = currentStep - 1;
+          goToStep(prevStep);
+        });
+      });
+      
+      // Same-as-phone checkbox functionality
+      document.getElementById('same-as-phone').addEventListener('change', function() {
+        if (this.checked) {
+          document.getElementById('whatsapp-number').value = document.getElementById('driver-phone').value;
+          document.getElementById('whatsapp-number').disabled = true;
+        } else {
+          document.getElementById('whatsapp-number').disabled = false;
+        }
+      });
+      
+      // Form submission
+      document.getElementById('tripForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (validateStep(3)) {
+          alert('تم إضافة الرحلة بنجاح! سيتمكن الركاب من رؤيتها الآن.');
+          // Here you would submit the form data to your backend
+          // window.location.href = 'test.html'; // Redirect back to dashboard
+        }
+      });
+    });
+
+    // Helper functions
+    function goToStep(step) {
+      document.querySelectorAll('.form-step').forEach(fs => {
+        fs.classList.remove('active');
+      });
+      document.querySelectorAll('.step').forEach(s => {
+        s.classList.remove('active');
+      });
+      
+      document.querySelector(`.form-step[data-step="${step}"]`).classList.add('active');
+      document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+    }
+
+    function validateStep(step) {
+      const currentStep = document.querySelector(`.form-step[data-step="${step}"]`);
+      const requiredFields = currentStep.querySelectorAll('[required]');
+      let valid = true;
+      
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          valid = false;
+          showError(field, 'هذا الحقل مطلوب');
+        } else {
+          clearError(field);
+        }
+      });
+      
+      return valid;
+    }
+
+    function showError(field, message) {
+      const errorElement = field.nextElementSibling;
+      if (errorElement && errorElement.classList.contains('error-message')) {
+        errorElement.textContent = message;
+      }
+      field.classList.add('is-invalid');
+    }
+
+    function clearError(field) {
+      const errorElement = field.nextElementSibling;
+      if (errorElement && errorElement.classList.contains('error-message')) {
+        errorElement.textContent = '';
+      }
+      field.classList.remove('is-invalid');
+    }
+
+    function updateSummary() {
+      document.getElementById('summary-from').textContent = document.getElementById('from-location').value;
+      document.getElementById('summary-to').textContent = document.getElementById('to-location').value;
+      
+      const date = document.getElementById('trip-date').value;
+      const time = document.getElementById('trip-time').value;
+      document.getElementById('summary-datetime').textContent = `${date} ${time}`;
+      
+      const tripType = document.querySelector('input[name="trip-type"]:checked').id === 'one-way' ? 
+        'رحلة ذهاب فقط' : 'رحلة ذهاب وعودة';
+      document.getElementById('summary-trip-type').textContent = tripType;
+      
+      const carModel = document.getElementById('car-model').value;
+      const carColor = document.getElementById('car-color').value;
+      document.getElementById('summary-car').textContent = `${carModel} (${carColor})`;
+      
+      const seats = document.getElementById('car-seats').value;
+      document.getElementById('summary-seats').textContent = seats;
+    }
+  </script>
+</body>
+</html>

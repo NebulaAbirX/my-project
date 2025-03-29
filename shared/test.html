@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>رايد - لوحة تحكم السائق</title>
+  <meta name="description" content="لوحة تحكم السائق في تطبيق رايد لمشاركة الركوب">
+  <meta name="keywords" content="مشاركة الركوب، تاكسي، سائق، دخل إضافي، تطبيق ويب تقدمي">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="assets/css/driver-dashboard.css" rel="stylesheet">
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#3498db">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    /* أنماط خاصة بصفحة السائق */
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .status-online {
+      background-color: #d4f8e2;
+      color: #1ea55b;
+    }
+    .status-offline {
+      background-color: #f8d4d4;
+      color: #a51e1e;
+    }
+    .status-toggle {
+      width: 60px;
+      height: 34px;
+      position: relative;
+      display: inline-block;
+    }
+    .status-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2ecc71;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    .dashboard-card {
+      height: 100%;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
+    .ride-request-card {
+      border-radius: 15px;
+      border: 1px solid #eaeaea;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+    .ride-request-card:hover {
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: #666;
+    }
+    .trip-history-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .badge-earnings {
+      background-color: #d4e8f8;
+      color: #1e6ca5;
+    }
+    .request-actions .btn {
+      border-radius: 50px;
+      padding: 8px 25px;
+      margin-right: 10px;
+      font-weight: 600;
+    }
+    .sidebar {
+      height: 100%;
+      width: 100%;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      position: sticky;
+      top: 100px;
+    }
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-nav li {
+      margin-bottom: 15px;
+    }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      color: #333;
+      text-decoration: none;
+    }
+    .sidebar-nav a.active,
+    .sidebar-nav a:hover {
+      background-color: #3498db;
+      color: #fff;
+    }
+    .sidebar-nav i {
+      margin-left: 10px;
+      font-size: 1.2rem;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        top: 0;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body class="dashboard-page rtl">
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1 class="sitename">رايد</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#dashboard" class="active">لوحة التحكم</a></li>
+          <li><a href="#trips">الرحلات</a></li>
+          <li><a href="#earnings">الأرباح</a></li>
+          <li><a href="#profile">الملف الشخصي</a></li>
+          <li><a href="#settings">الإعدادات</a></li>
+          <li><a href="#support">الدعم الفني</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <div class="d-flex align-items-center gap-3">
+        <!-- زر الإشعارات في شريط التنقل -->
+        <div class="dropdown">
+          <button class="btn btn-link position-relative text-dark p-0" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell-fill fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              3
+              <span class="visually-hidden">إشعارات غير مقروءة</span>
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+            <li><h6 class="dropdown-header">الإشعارات</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-car-front text-primary bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">طلب رحلة جديد</h6>
+                  <p class="mb-0 text-muted small">من العميل سارة العبدالله</p>
+                  <small class="text-muted">منذ 5 دقائق</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-cash text-success bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">تأكيد استلام دفعة نقدية</h6>
+                  <p class="mb-0 text-muted small">تم تسجيل استلام 65 ر.س من العميل</p>
+                  <small class="text-muted">منذ ساعتين</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-star-fill text-warning bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">تقييم جديد (5 نجوم)</h6>
+                  <p class="mb-0 text-muted small">قام العميل محمد بتقييمك بـ 5 نجوم</p>
+                  <small class="text-muted">منذ 4 ساعات</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-center" href="#">عرض جميع الإشعارات</a></li>
+          </ul>
+        </div>
+        <img src="assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle" width="40" height="40">
+      </div>
+    </div>
+  </header>
+
+  <main class="main" style="margin-top: 90px; padding-top: 20px;">
+    <div class="container my-4">
+      <div class="row">
+        
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+          <div class="sidebar">
+            <div class="driver-info text-center mb-4">
+              <img src="assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle mb-3" width="100" height="100">
+              <h4>أحمد الخالدي</h4>
+              <p class="text-muted">سائق منذ 2 سنوات</p>
+              <div class="driver-rating">
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-half text-warning"></i>
+                <span class="rating-value ms-2">4.8</span>
+              </div>
+            </div>
+            
+            <ul class="sidebar-nav">
+              <li><a href="#dashboard" class="active"><i class="bi bi-speedometer2"></i> لوحة التحكم</a></li>
+              <li><a href="#requests"><i class="bi bi-bell"></i> طلبات الرحلات <span class="badge bg-danger ms-2">3</span></a></li>
+              <li><a href="#trips"><i class="bi bi-car-front"></i> سجل الرحلات</a></li>
+              <li><a href="#earnings"><i class="bi bi-wallet2"></i> الأرباح والمدفوعات</a></li>
+              <li><a href="#messages"><i class="bi bi-chat-dots"></i> الدردشات</a></li>
+              <li><a href="#profile"><i class="bi bi-person"></i> الملف الشخصي</a></li>
+              <li><a href="#settings"><i class="bi bi-gear"></i> الإعدادات</a></li>
+              <li><a href="#support"><i class="bi bi-question-circle"></i> الدعم الفني</a></li>
+              <li><a href="index.html"><i class="bi bi-box-arrow-right"></i> تسجيل الخروج</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9">
+          
+          <!-- Dashboard Section -->
+          <section id="dashboard" class="dashboard-section mb-5">
+            <h2 class="section-title mb-4">لوحة التحكم</h2>
+            
+            <!-- Stats Row -->
+            <div class="row mb-4">
+              <div class="col-md-3 col-6 mb-3">
+                <div class="dashboard-card text-center">
+                  <i class="bi bi-currency-dollar text-success fs-1 mb-2"></i>
+                  <div class="stat-value">958 ر.س</div>
+                  <div class="stat-label">أرباح اليوم</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-3">
+                <div class="dashboard-card text-center">
+                  <i class="bi bi-car-front text-primary fs-1 mb-2"></i>
+                  <div class="stat-value">7</div>
+                  <div class="stat-label">رحلات اليوم</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-3">
+                <div class="dashboard-card text-center">
+                  <i class="bi bi-clock-history text-warning fs-1 mb-2"></i>
+                  <div class="stat-value">6.5</div>
+                  <div class="stat-label">ساعات العمل</div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-3">
+                <div class="dashboard-card text-center">
+                  <i class="bi bi-star text-danger fs-1 mb-2"></i>
+                  <div class="stat-value">4.9</div>
+                  <div class="stat-label">متوسط التقييم</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Ride Requests -->
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5><i class="bi bi-bell me-2"></i> طلبات الرحلات الجديدة</h5>
+                <span class="badge bg-primary rounded-pill">3 طلبات جديدة</span>
+              </div>
+              
+              <div class="ride-request-card">
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                      <img src="assets/img/avatar-3.webp" alt="صورة الراكب" class="rounded-circle me-3" width="50" height="50">
+                      <div>
+                        <h6 class="mb-0">سارة العبدالله</h6>
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-star-fill text-warning me-1"></i>
+                          <span>4.8</span>
+                          <span class="mx-2">•</span>
+                          <span>43 رحلة</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                      <div class="col-12">
+                        <div class="d-flex">
+                          <div class="me-3">
+                            <div class="d-flex flex-column align-items-center">
+                              <i class="bi bi-circle text-success"></i>
+                              <div style="width: 2px; height: 50px; background-color: #ddd;"></div>
+                              <i class="bi bi-geo-alt-fill text-danger"></i>
+                            </div>
+                          </div>
+                          <div>
+                            <div class="mb-3">
+                              <div class="fw-bold">نقطة الانطلاق:</div>
+                              <div>مجمع الملك فهد الطبي، حي الملز</div>
+                            </div>
+                            <div>
+                              <div class="fw-bold">الوجهة:</div>
+                              <div>برج المملكة، طريق الملك فهد</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center text-muted">
+                      <div class="me-3">
+                        <i class="bi bi-cash me-1"></i>
+                        <span>65 ر.س (دفع نقدي)</span>
+                      </div>
+                      <div class="me-3">
+                        <i class="bi bi-arrow-left-right me-1"></i>
+                        <span>12.4 كم</span>
+                      </div>
+                      <div>
+                        <i class="bi bi-clock me-1"></i>
+                        <span>22 دقيقة</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 d-flex flex-column justify-content-center mt-3 mt-md-0">
+                    <div class="timer text-center mb-3">
+                      <span class="d-block text-muted">متبقي للرد</span>
+                      <span class="fs-3 fw-bold text-danger">0:42</span>
+                    </div>
+                    <div class="request-actions d-flex flex-wrap justify-content-center">
+                      <button class="btn btn-success mb-2 mb-md-0"><i class="bi bi-check-circle me-1"></i> قبول</button>
+                      <button class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i> رفض</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="ride-request-card">
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                      <img src="assets/img/avatar-2.webp" alt="صورة الراكب" class="rounded-circle me-3" width="50" height="50">
+                      <div>
+                        <h6 class="mb-0">محمد العتيبي</h6>
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-star-fill text-warning me-1"></i>
+                          <span>4.6</span>
+                          <span class="mx-2">•</span>
+                          <span>28 رحلة</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                      <div class="col-12">
+                        <div class="d-flex">
+                          <div class="me-3">
+                            <div class="d-flex flex-column align-items-center">
+                              <i class="bi bi-circle text-success"></i>
+                              <div style="width: 2px; height: 50px; background-color: #ddd;"></div>
+                              <i class="bi bi-geo-alt-fill text-danger"></i>
+                            </div>
+                          </div>
+                          <div>
+                            <div class="mb-3">
+                              <div class="fw-bold">نقطة الانطلاق:</div>
+                              <div>جامعة الملك سعود، حي الدرعية</div>
+                            </div>
+                            <div>
+                              <div class="fw-bold">الوجهة:</div>
+                              <div>الرياض بارك، طريق الثمامة</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center text-muted">
+                      <div class="me-3">
+                        <i class="bi bi-cash me-1"></i>
+                        <span>42 ر.س (دفع نقدي)</span>
+                      </div>
+                      <div class="me-3">
+                        <i class="bi bi-arrow-left-right me-1"></i>
+                        <span>8.7 كم</span>
+                      </div>
+                      <div>
+                        <i class="bi bi-clock me-1"></i>
+                        <span>15 دقيقة</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 d-flex flex-column justify-content-center mt-3 mt-md-0">
+                    <div class="timer text-center mb-3">
+                      <span class="d-block text-muted">متبقي للرد</span>
+                      <span class="fs-3 fw-bold text-danger">1:15</span>
+                    </div>
+                    <div class="request-actions d-flex flex-wrap justify-content-center">
+                      <button class="btn btn-success mb-2 mb-md-0"><i class="bi bi-check-circle me-1"></i> قبول</button>
+                      <button class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i> رفض</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="text-center mt-3">
+                <a href="#requests" class="btn btn-outline-primary">عرض كل الطلبات</a>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Trip History Seciton -->
+          <section id="trips" class="mb-5">
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5><i class="bi bi-clock-history me-2"></i> سجل الرحلات الأخيرة</h5>
+                <div class="d-flex">
+                  <div class="dropdown me-2">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      تصفية حسب
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">اليوم</a></li>
+                      <li><a class="dropdown-item" href="#">هذا الأسبوع</a></li>
+                      <li><a class="dropdown-item" href="#">هذا الشهر</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="trip-history-item">
+                <div class="row">
+                  <div class="col-md-9">
+                    <div class="d-flex align-items-center mb-2">
+                      <img src="assets/img/avatar-5.webp" alt="صورة الراكب" class="rounded-circle me-3" width="40" height="40">
+                      <div>
+                        <h6 class="mb-0">خالد القحطاني</h6>
+                        <div class="text-muted small">اليوم، 2:45 م</div>
+                      </div>
+                    </div>
+                    
+                    <div class="d-flex mt-2">
+                      <div class="me-3">
+                        <div class="d-flex flex-column align-items-center">
+                          <i class="bi bi-circle text-success small"></i>
+                          <div style="width: 1px; height: 25px; background-color: #ddd;"></div>
+                          <i class="bi bi-geo-alt-fill text-danger small"></i>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="small mb-1">حي العليا، شارع العروبة</div>
+                        <div class="small">حي الملقا، طريق الأمير محمد بن سلمان</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 d-flex flex-column justify-content-center align-items-md-end mt-2 mt-md-0">
+                    <span class="badge status-badge status-online mb-2">70 ر.س</span>
+                    <div class="d-flex align-items-center text-muted small">
+                      <i class="bi bi-star-fill text-warning me-1"></i>
+                      <span>5.0</span>
+                      <span class="mx-2">•</span>
+                      <span>14.2 كم</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="trip-history-item">
+                <div class="row">
+                  <div class="col-md-9">
+                    <div class="d-flex align-items-center mb-2">
+                      <img src="assets/img/avatar-4.webp" alt="صورة الراكب" class="rounded-circle me-3" width="40" height="40">
+                      <div>
+                        <h6 class="mb-0">نورة السعيد</h6>
+                        <div class="text-muted small">اليوم، 11:20 ص</div>
+                      </div>
+                    </div>
+                    
+                    <div class="d-flex mt-2">
+                      <div class="me-3">
+                        <div class="d-flex flex-column align-items-center">
+                          <i class="bi bi-circle text-success small"></i>
+                          <div style="width: 1px; height: 25px; background-color: #ddd;"></div>
+                          <i class="bi bi-geo-alt-fill text-danger small"></i>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="small mb-1">حي النخيل، طريق الملك فهد</div>
+                        <div class="small">مستشفى الملك فيصل التخصصي</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 d-flex flex-column justify-content-center align-items-md-end mt-2 mt-md-0">
+                    <span class="badge status-badge status-online mb-2">52 ر.س</span>
+                    <div class="d-flex align-items-center text-muted small">
+                      <i class="bi bi-star-fill text-warning me-1"></i>
+                      <span>4.7</span>
+                      <span class="mx-2">•</span>
+                      <span>9.5 كم</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="trip-history-item">
+                <div class="row">
+                  <div class="col-md-9">
+                    <div class="d-flex align-items-center mb-2">
+                      <img src="assets/img/avatar-1.webp" alt="صورة الراكب" class="rounded-circle me-3" width="40" height="40">
+                      <div>
+                        <h6 class="mb-0">فهد العمري</h6>
+                        <div class="text-muted small">اليوم، 9:15 ص</div>
+                      </div>
+                    </div>
+                    
+                    <div class="d-flex mt-2">
+                      <div class="me-3">
+                        <div class="d-flex flex-column align-items-center">
+                          <i class="bi bi-circle text-success small"></i>
+                          <div style="width: 1px; height: 25px; background-color: #ddd;"></div>
+                          <i class="bi bi-geo-alt-fill text-danger small"></i>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="small mb-1">حي الياسمين، شارع أنس بن مالك</div>
+                        <div class="small">برج رافال، طريق الملك فهد</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3 d-flex flex-column justify-content-center align-items-md-end mt-2 mt-md-0">
+                    <span class="badge status-badge status-online mb-2">85 ر.س</span>
+                    <div class="d-flex align-items-center text-muted small">
+                      <i class="bi bi-star-fill text-warning me-1"></i>
+                      <span>4.9</span>
+                      <span class="mx-2">•</span>
+                      <span>17.8 كم</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="text-center mt-4">
+                <a href="#alltrips" class="btn btn-outline-primary">عرض جميع الرحلات</a>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Settings Section -->
+          <section id="settings" class="mb-5">
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5><i class="bi bi-gear me-2"></i> الإعدادات</h5>
+                <button class="btn btn-sm btn-outline-primary">حفظ التغييرات</button>
+              </div>
+              
+              <!-- إعدادات الحالة -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">حالة التوفر</h6>
+                  <div class="d-flex align-items-center">
+                    <span class="status-text me-3">حالتك:</span>
+                    <span id="statusBadge" class="status-badge status-offline">غير متصل</span>
+                    <label class="status-toggle ms-3">
+                      <input type="checkbox" id="statusToggle">
+                      <span class="slider"></span>
+                    </label>
+                    <span class="ms-3 text-muted small">قم بتفعيل هذا الخيار عندما تكون متاحاً لاستقبال طلبات الرحلات</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- إعدادات المدفوعات (تم تحديثها لتوضيح أن الدفع نقدي فقط) -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">إعدادات المدفوعات</h6>
+                  <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <strong>تنبيه:</strong> حالياً، يتم قبول الدفع النقدي فقط من العملاء مباشرةً. لا يدعم التطبيق الدفع عبر الإنترنت.
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="cashNotify" checked>
+                    <label class="form-check-label" for="cashNotify">تلقي إشعارات تأكيد المدفوعات النقدية</label>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="preferredMoneyOption" class="form-label">الخيار المفضل للتعامل النقدي</label>
+                    <select class="form-select" id="preferredMoneyOption">
+                      <option value="exact" selected>المبلغ المضبوط فقط</option>
+                      <option value="change">أقبل تقديم الباقي للعميل</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="requestReceipt" checked>
+                    <label class="form-check-label" for="requestReceipt">إصدار إيصال للعميل عند طلبه</label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- إعدادات التقييم (قسم جديد) -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">إعدادات التقييم</h6>
+                  <div class="alert alert-warning">
+                    <i class="bi bi-star-fill me-2"></i>
+                    <strong>هام:</strong> التقييمات تؤثر مباشرة على ترتيبك في قائمة السائقين وظهور الطلبات لك.
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="autoRateReminder" checked>
+                    <label class="form-check-label" for="autoRateReminder">تذكير العميل بتقييمك بعد الرحلة</label>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="ratingNotification" checked>
+                    <label class="form-check-label" for="ratingNotification">إشعارات التقييمات الجديدة</label>
+                  </div>
+                  
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="showRatingHistory">
+                    <label class="form-check-label" for="showRatingHistory">عرض سجل تقييماتي للركاب الجدد</label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- إعدادات عامة -->
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">إعدادات عامة</h6>
+                  <div class="mb-3">
+                    <label for="languageSelect" class="form-label">اللغة</label>
+                    <select class="form-select" id="languageSelect">
+                      <option value="ar" selected>العربية</option>
+                      <option value="en">English</option>
+                    </select>
+                  </div>
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="darkMode">
+                    <label class="form-check-label" for="darkMode">الوضع الداكن</label>
+                  </div>
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="notifications" checked>
+                    <label class="form-check-label" for="notifications">الإشعارات</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer py-4 mt-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0">&copy; 2025 رايد. جميع الحقوق محفوظة</p>
+        </div>
+        <div class="col-md-6">
+          <div class="text-md-end">
+            <a href="#" class="text-muted me-3">شروط الاستخدام</a>
+            <a href="#" class="text-muted me-3">سياسة الخصوصية</a>
+            <a href="#" class="text-muted">اتصل بنا</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <!-- Status Toggle Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const statusToggle = document.getElementById('statusToggle');
+      const statusBadge = document.getElementById('statusBadge');
+      
+      statusToggle.addEventListener('change', function() {
+        if (this.checked) {
+          statusBadge.textContent = 'متصل';
+          statusBadge.classList.remove('status-offline');
+          statusBadge.classList.add('status-online');
+        } else {
+          statusBadge.textContent = 'غير متصل';
+          statusBadge.classList.remove('status-online');
+          statusBadge.classList.add('status-offline');
+        }
+      });
+    });
+  </script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker not registered', err));
+      });
+    }
+  </script>
+  <!-- Add this button to your dashboard where appropriate -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTripModal">
+  <i class="bi bi-plus-circle me-1"></i> إضافة رحلة جديدة
+</button>
+
+<!-- Modal for adding new trip -->
+<div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="addTripModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="addTripModalLabel">إضافة رحلة جديدة</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Insert your multi-step form here -->
+        <!-- Your form HTML goes here -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add this button to the driver dashboard -->
+<a href="add-trip.html" class="btn btn-primary">
+  <i class="bi bi-plus-circle me-1"></i> إضافة رحلة جديدة
+</a>
+<style>
+/* Multi-step form styles */
+.form-step {
+  display: none;
+}
+
+.form-step.active {
+  display: block;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.step.active .step-circle {
+  background-color: #3498db;
+  color: white;
+}
+
+/* Form navigation */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Multi-step form navigation
+  const formSteps = document.querySelectorAll('.form-step');
+  const stepIndicators = document.querySelectorAll('.step');
+  const prevButtons = document.querySelectorAll('.btn-prev');
+  const nextButtons = document.querySelectorAll('.btn-next');
+  
+  // Handle "Next" button clicks
+  nextButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const currentStep = parseInt(button.closest('.form-step').dataset.step);
+      const nextStep = currentStep + 1;
+      
+      // Validate current step before proceeding
+      if (validateStep(currentStep)) {
+        goToStep(nextStep);
+        updateSummary();
+      }
+    });
+  });
+  
+  // Handle "Previous" button clicks
+  prevButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const currentStep = parseInt(button.closest('.form-step').dataset.step);
+      const prevStep = currentStep - 1;
+      goToStep(prevStep);
+    });
+  });
+  
+  // Same-as-phone checkbox functionality
+  document.getElementById('same-as-phone').addEventListener('change', function() {
+    if (this.checked) {
+      document.getElementById('whatsapp-number').value = document.getElementById('driver-phone').value;
+      document.getElementById('whatsapp-number').disabled = true;
+    } else {
+      document.getElementById('whatsapp-number').disabled = false;
+    }
+  });
+  
+  // Form submission
+  document.getElementById('tripForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (validateStep(3)) {
+      alert('تم إضافة الرحلة بنجاح! سيتمكن الركاب من رؤيتها الآن.');
+      // Here you would submit the form data to your backend
+    }
+  });
+});
+
+// Helper functions
+function goToStep(step) {
+  document.querySelectorAll('.form-step').forEach(fs => {
+    fs.classList.remove('active');
+  });
+  document.querySelectorAll('.step').forEach(s => {
+    s.classList.remove('active');
+  });
+  
+  document.querySelector(`.form-step[data-step="${step}"]`).classList.add('active');
+  document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+}
+
+function validateStep(step) {
+  const currentStep = document.querySelector(`.form-step[data-step="${step}"]`);
+  const requiredFields = currentStep.querySelectorAll('[required]');
+  let valid = true;
+  
+  requiredFields.forEach(field => {
+    if (!field.value.trim()) {
+      valid = false;
+      showError(field, 'هذا الحقل مطلوب');
+    } else {
+      clearError(field);
+    }
+  });
+  
+  return valid;
+}
+
+function showError(field, message) {
+  const errorElement = field.nextElementSibling;
+  if (errorElement && errorElement.classList.contains('error-message')) {
+    errorElement.textContent = message;
+  }
+  field.classList.add('is-invalid');
+}
+
+function clearError(field) {
+  const errorElement = field.nextElementSibling;
+  if (errorElement && errorElement.classList.contains('error-message')) {
+    errorElement.textContent = '';
+  }
+  field.classList.remove('is-invalid');
+}
+
+function updateSummary() {
+  document.getElementById('summary-from').textContent = document.getElementById('from-location').value;
+  document.getElementById('summary-to').textContent = document.getElementById('to-location').value;
+  
+  const date = document.getElementById('trip-date').value;
+  const time = document.getElementById('trip-time').value;
+  document.getElementById('summary-datetime').textContent = `${date} ${time}`;
+  
+  const tripType = document.querySelector('input[name="trip-type"]:checked').id === 'one-way' ? 
+    'رحلة ذهاب فقط' : 'رحلة ذهاب وعودة';
+  document.getElementById('summary-trip-type').textContent = tripType;
+  
+  const carModel = document.getElementById('car-model').value;
+  const carColor = document.getElementById('car-color').value;
+  document.getElementById('summary-car').textContent = `${carModel} (${carColor})`;
+  
+  const seats = document.getElementById('car-seats').value;
+  document.getElementById('summary-seats').textContent = seats;
+}
+</script>
+</body>
+</html>

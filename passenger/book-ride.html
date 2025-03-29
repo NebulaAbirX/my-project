@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>رايد - حجز رحلة</title>
+  <meta name="description" content="حجز رحلة في تطبيق رايد لمشاركة الركوب">
+  <meta name="keywords" content="مشاركة الركوب، حجز رحلة، راكب، تطبيق ويب تقدمي">
+
+  <!-- Favicons -->
+  <link href="../assets/img/favicon.png" rel="icon">
+  <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+  <link href="../assets/css/driver-dashboard.css" rel="stylesheet">
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#3498db">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    .dashboard-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      margin-bottom: 1.5rem;
+    }
+    .map-container {
+      height: 400px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .vehicle-option {
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    .vehicle-option:hover {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+    .vehicle-option.selected {
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+    }
+    .form-label {
+      font-weight: 500;
+    }
+    .booking-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .booking-steps:before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      right: 0;
+      left: 0;
+      height: 2px;
+      background-color: #e9ecef;
+      z-index: 1;
+    }
+    .booking-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .step-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .step-number.active {
+      background-color: #3498db;
+      color: white;
+    }
+    .step-number.completed {
+      background-color: #28a745;
+      color: white;
+    }
+    .step-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .favorite-locations-container {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .favorite-location-item {
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .favorite-location-item:hover {
+      background-color: #f8f9fa;
+    }
+    .payment-method {
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .payment-method:hover {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+    .payment-method.selected {
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+    }
+    .coupon-container {
+      border: 1px dashed #dee2e6;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .trip-route {
+      position: relative;
+      padding-right: 30px;
+    }
+    .trip-route:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 10px;
+      height: 100%;
+      width: 2px;
+      background-color: #e9ecef;
+    }
+    .trip-route-point {
+      position: relative;
+      padding-bottom: 15px;
+    }
+    .trip-route-point:before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      right: -30px;
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      background-color: #3498db;
+    }
+    .trip-route-point:last-child:before {
+      background-color: #dc3545;
+    }
+    .driver-preview {
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+    }
+    .booking-confirmation {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .booking-confirmation .icon {
+      font-size: 4rem;
+      color: #28a745;
+      margin-bottom: 1.5rem;
+    }
+    .loading-indicator {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+    .loading-indicator .spinner-border {
+      width: 3rem;
+      height: 3rem;
+    }
+  </style>
+</head>
+
+<body class="passenger-dashboard rtl">
+  <!-- Header -->
+  <header id="header" class="header shadow-sm fixed-top bg-white">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <button class="btn btn-sm d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <a href="../index.html" class="logo d-flex align-items-center">
+          <span class="fs-4 fw-bold text-primary">رايد</span>
+          <span class="badge bg-success ms-2 text-uppercase">الراكب</span>
+        </a>
+      </div>
+      
+      <div class="d-flex align-items-center gap-3">
+        <!-- إضافة زر الإشعارات -->
+        <div class="dropdown">
+          <button class="btn btn-link position-relative text-dark p-0" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell-fill fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              2
+              <span class="visually-hidden">إشعارات غير مقروءة</span>
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+            <li><h6 class="dropdown-header">الإشعارات</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-tag-fill text-primary bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">عرض خاص: خصم 20%</h6>
+                  <p class="mb-0 text-muted small">استخدم الكود RIDE20 عند حجز رحلتك القادمة</p>
+                  <small class="text-muted">منذ ساعتين</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-car-front text-success bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">تأكيد حجز الرحلة</h6>
+                  <p class="mb-0 text-muted small">تم تأكيد رحلتك إلى مول النخيل غداً</p>
+                  <small class="text-muted">منذ 3 ساعات</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-center" href="#">عرض جميع الإشعارات</a></li>
+          </ul>
+        </div>
+        <img src="../assets/img/avatar-4.webp" alt="صورة الراكب" class="rounded-circle" width="40" height="40">
+      </div>
+    </div>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 col-xl-2 offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header d-lg-none">
+          <h5 class="offcanvas-title">القائمة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <div class="d-flex flex-column flex-shrink-0 p-3 h-100">
+          <div class="text-center mb-4 d-lg-none">
+            <img src="../assets/img/avatar-4.webp" alt="صورة الراكب" class="rounded-circle mb-2" width="80" height="80">
+            <h6 class="mb-0">نورة السعيد</h6>
+            <p class="text-muted small mb-2">ID: P-287631</p>
+          </div>
+          
+          <ul class="nav nav-pills flex-column mb-auto sidebar-nav">
+            <li class="nav-item">
+              <a href="passenger-dashbord.html" class="nav-link">
+                <i class="bi bi-speedometer2 me-2"></i>
+                لوحة التحكم
+              </a>
+            </li>
+            <li>
+              <a href="book-ride.html" class="nav-link active">
+                <i class="bi bi-car-front me-2"></i>
+                حجز رحلة
+              </a>
+            </li>
+            <li>
+              <a href="passenger-trips.html" class="nav-link">
+                <i class="bi bi-clock-history me-2"></i>
+                رحلاتي
+              </a>
+            </li>
+            <li>
+              <a href="saved-locations.html" class="nav-link">
+                <i class="bi bi-geo-alt me-2"></i>
+                أماكني المفضلة
+              </a>
+            </li>
+            <li>
+              <a href="payments.html" class="nav-link">
+                <i class="bi bi-wallet me-2"></i>
+                المدفوعات
+              </a>
+            </li>
+            <li>
+              <a href="passenger-profile.html" class="nav-link">
+                <i class="bi bi-person me-2"></i>
+                الملف الشخصي
+              </a>
+            </li>
+            <li>
+              <a href="passenger-settings.html" class="nav-link">
+                <i class="bi bi-gear me-2"></i>
+                الإعدادات
+              </a>
+            </li>
+            <li>
+              <a href="passenger-support.html" class="nav-link">
+                <i class="bi bi-question-circle me-2"></i>
+                الدعم الفني
+              </a>
+            </li>
+          </ul>
+          <hr>
+          <a href="#logout" class="nav-link">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            تسجيل الخروج
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9 col-xl-10 py-5 ms-auto" style="margin-top: 60px;">
+        <div class="container-fluid">
+          
+          <!-- Booking Process Section -->
+          <section id="book-ride" class="mb-5">
+            <div class="dashboard-card">
+              <h4 class="mb-4"><i class="bi bi-car-front me-2"></i> حجز رحلة</h4>
+              
+              <!-- Booking Steps Indicator -->
+              <div class="booking-steps">
+                <div class="booking-step">
+                  <div class="step-number active" id="step1-indicator">1</div>
+                  <div class="step-label">تحديد المسار</div>
+                </div>
+                <div class="booking-step">
+                  <div class="step-number" id="step2-indicator">2</div>
+                  <div class="step-label">اختيار المركبة</div>
+                </div>
+                <div class="booking-step">
+                  <div class="step-number" id="step3-indicator">3</div>
+                  <div class="step-label">طريقة الدفع</div>
+                </div>
+                <div class="booking-step">
+                  <div class="step-number" id="step4-indicator">4</div>
+                  <div class="step-label">تأكيد الحجز</div>
+                </div>
+              </div>
+              
+              <!-- Step 1: Route Selection -->
+              <div id="step1" class="booking-step-content">
+                <div class="row">
+                  <div class="col-md-8 mb-4">
+                    <div class="map-container">
+                      <div class="text-center">
+                        <i class="bi bi-map fs-1 text-secondary mb-2"></i>
+                        <h6>خريطة الرحلة</h6>
+                        <p class="text-muted small">يُرجى النقر على الخريطة لتحديد موقع الانطلاق والوجهة</p>
+                      </div>
+                      <div class="loading-indicator" id="mapLoading">
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">جاري التحميل...</span>
+                        </div>
+                        <p class="mt-2">جاري البحث عن أفضل مسار...</p>
+                      </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                      <div class="mb-3">
+                        <label for="pickupLocation" class="form-label">موقع الانطلاق</label>
+                        <div class="input-group">
+                          <span class="input-group-text bg-primary text-white">
+                            <i class="bi bi-geo-alt"></i>
+                          </span>
+                          <input type="text" class="form-control" id="pickupLocation" placeholder="أدخل موقع الانطلاق">
+                          <button class="btn btn-outline-secondary" type="button">
+                            <i class="bi bi-geo-alt-fill"></i> موقعي الحالي
+                          </button>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="dropoffLocation" class="form-label">الوجهة</label>
+                        <div class="input-group">
+                          <span class="input-group-text bg-danger text-white">
+                            <i class="bi bi-geo-alt"></i>
+                          </span>
+                          <input type="text" class="form-control" id="dropoffLocation" placeholder="أدخل الوجهة">
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="tripDate" class="form-label">تاريخ الرحلة</label>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="bi bi-calendar"></i>
+                          </span>
+                          <input type="date" class="form-control" id="tripDate">
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="tripTime" class="form-label">وقت الرحلة</label>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="bi bi-clock"></i>
+                          </span>
+                          <input type="time" class="form-control" id="tripTime">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                      <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-3">الأماكن المفضلة</h5>
+                        <div class="favorite-locations-container mb-4">
+                          <div class="favorite-location-item mb-2" data-location="حي النخيل، شارع الأمير تركي، الرياض" onclick="selectFavoriteLocation(this, 'pickup')">
+                            <h6 class="mb-1"><i class="bi bi-house-door me-2"></i> المنزل</h6>
+                            <p class="text-muted small mb-0">حي النخيل، شارع الأمير تركي، الرياض</p>
+                          </div>
+                          <div class="favorite-location-item mb-2" data-location="برج المملكة، طريق الملك فهد، الرياض" onclick="selectFavoriteLocation(this, 'dropoff')">
+                            <h6 class="mb-1"><i class="bi bi-building me-2"></i> المكتب</h6>
+                            <p class="text-muted small mb-0">برج المملكة، طريق الملك فهد، الرياض</p>
+                          </div>
+                          <div class="favorite-location-item mb-2" data-location="نادي اللياقة الأول، حي العليا، الرياض" onclick="selectFavoriteLocation(this, 'dropoff')">
+                            <h6 class="mb-1"><i class="bi bi-bicycle me-2"></i> النادي الرياضي</h6>
+                            <p class="text-muted small mb-0">نادي اللياقة الأول، حي العليا، الرياض</p>
+                          </div>
+                          <div class="favorite-location-item mb-2" data-location="مول النخيل، طريق عثمان بن عفان، الرياض" onclick="selectFavoriteLocation(this, 'dropoff')">
+                            <h6 class="mb-1"><i class="bi bi-shop me-2"></i> مول النخيل</h6>
+                            <p class="text-muted small mb-0">مول النخيل، طريق عثمان بن عفان، الرياض</p>
+                          </div>
+                        </div>
+                        
+                        <div class="mt-auto">
+                          <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="scheduleCheck">
+                            <label class="form-check-label" for="scheduleCheck">
+                              جدولة الرحلة لوقت لاحق
+                            </label>
+                          </div>
+                          <button onclick="goToStep(2)" class="btn btn-primary w-100">
+                            <i class="bi bi-arrow-left me-2"></i> التالي: اختيار المركبة
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Step 2: Vehicle Selection -->
+              <div id="step2" class="booking-step-content" style="display: none;">
+                <div class="row">
+                  <div class="col-md-8 mb-4">
+                    <h5 class="mb-3">اختر نوع المركبة</h5>
+                    
+                    <div class="vehicle-option selected" onclick="selectVehicleOption(this)">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <div class="me-3">
+                            <i class="bi bi-car-front fs-2"></i>
+                          </div>
+                          <div>
+                            <h6 class="mb-1">اقتصادي</h6>
+                            <p class="text-muted small mb-0">سيارات صغيرة، مناسبة للرحلات الاقتصادية</p>
+                          </div>
+                        </div>
+                        <div class="text-end">
+                          <h6 class="mb-1">18.00 ر.س</h6>
+                          <p class="text-muted small mb-0">10 دقائق</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="vehicle-option" onclick="selectVehicleOption(this)">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <div class="me-3">
+                            <i class="bi bi-car-front fs-2"></i>
+                          </div>
+                          <div>
+                            <h6 class="mb-1">مريح</h6>
+                            <p class="text-muted small mb-0">سيارات متوسطة الحجم، مناسبة للرحلات المريحة</p>
+                          </div>
+                        </div>
+                        <div class="text-end">
+                          <h6 class="mb-1">27.00 ر.س</h6>
+                          <p class="text-muted small mb-0">8 دقائق</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="vehicle-option" onclick="selectVehicleOption(this)">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <div class="me-3">
+                            <i class="bi bi-car-front-fill fs-2"></i>
+                          </div>
+                          <div>
+                            <h6 class="mb-1">مميز</h6>
+                            <p class="text-muted small mb-0">سيارات فاخرة، تجربة ركوب متميزة</p>
+                          </div>
+                        </div>
+                        <div class="text-end">
+                          <h6 class="mb-1">45.00 ر.س</h6>
+                          <p class="text-muted small mb-0">12 دقائق</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                      <h5 class="mb-3">خيارات إضافية</h5>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="petFriendlyOption">
+                            <label class="form-check-label d-flex justify-content-between" for="petFriendlyOption">
+                              <span><i class="bi bi-heart me-2"></i> مناسب للحيوانات الأليفة</span>
+                              <span>+5 ر.س</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="extraLuggageOption">
+                            <label class="form-check-label d-flex justify-content-between" for="extraLuggageOption">
+                              <span><i class="bi bi-briefcase me-2"></i> أمتعة إضافية</span>
+                              <span>+7 ر.س</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="priorityPickupOption">
+                            <label class="form-check-label d-flex justify-content-between" for="priorityPickupOption">
+                              <span><i class="bi bi-lightning me-2"></i> أولوية الوصول</span>
+                              <span>+10 ر.س</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="silentRideOption">
+                            <label class="form-check-label d-flex justify-content-between" for="silentRideOption">
+                              <span><i class="bi bi-volume-mute me-2"></i> رحلة هادئة</span>
+                              <span>+0 ر.س</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                      <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-4">تفاصيل الرحلة</h5>
+                        
+                        <div class="trip-route mb-4">
+                          <div class="trip-route-point">
+                            <h6 class="fw-bold text-dark mb-0">موقع الانطلاق</h6>
+                            <p class="text-muted small mb-1" id="summaryPickup">حي النخيل، شارع الأمير تركي، الرياض</p>
+                          </div>
+                          <div class="trip-route-point">
+                            <h6 class="fw-bold text-dark mb-0">الوجهة</h6>
+                            <p class="text-muted small mb-0" id="summaryDropoff">برج المملكة، طريق الملك فهد، الرياض</p>
+                          </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>المسافة:</span>
+                            <span>5.7 كم</span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>الوقت المتوقع:</span>
+                            <span>15 دقيقة</span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>سعر الرحلة:</span>
+                            <span>18.00 ر.س</span>
+                          </div>
+                          <div class="d-flex justify-content-between">
+                            <span>الخيارات الإضافية:</span>
+                            <span id="extraOptions">0.00 ر.س</span>
+                          </div>
+                          <hr>
+                          <div class="d-flex justify-content-between fw-bold">
+                            <span>الإجمالي:</span>
+                            <span id="totalFare">18.00 ر.س</span>
+                          </div>
+                        </div>
+                        
+                        <div class="mt-auto">
+                          <div class="d-flex">
+                            <button onclick="goToStep(1)" class="btn btn-secondary me-2">
+                              السابق
+                            </button>
+                            <button onclick="goToStep(3)" class="btn btn-primary flex-grow-1">
+                              <i class="bi bi-arrow-left me-2"></i> التالي: طريقة الدفع
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Step 3: Payment Method -->
+              <div id="step3" class="booking-step-content" style="display: none;">
+                <div class="row">
+                  <div class="col-md-8 mb-4">
+                    <h5 class="mb-3">اختر طريقة الدفع</h5>
+                    
+                    <div class="payment-method selected" onclick="selectPaymentMethod(this)">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-cash fs-3 me-3 text-success"></i>
+                          <div>
+                            <h6 class="mb-0">الدفع النقدي</h6>
+                            <p class="text-muted small mb-0">الدفع نقداً عند نهاية الرحلة</p>
+                          </div>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="paymentMethodRadio" id="cashMethodRadio" checked>
+                          <label class="form-check-label" for="cashMethodRadio"></label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="payment-method" onclick="selectPaymentMethod(this)">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-credit-card fs-3 me-3 text-primary"></i>
+                          <div>
+                            <h6 class="mb-0">بطاقة الائتمان</h6>
+                            <p class="text-muted small mb-0">**** **** **** 5863</p>
+                          </div>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="paymentMethodRadio" id="cardMethodRadio">
+                          <label class="form-check-label" for="cardMethodRadio"></label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="payment-method" onclick="selectPaymentMethod(this)">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-wallet fs-3 me-3 text-warning"></i>
+                          <div>
+                            <h6 class="mb-0">محفظة رايد</h6>
+                            <p class="text-muted small mb-0">الرصيد: 120 ر.س</p>
+                          </div>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="paymentMethodRadio" id="walletMethodRadio">
+                          <label class="form-check-label" for="walletMethodRadio"></label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                      <h5 class="mb-3">كوبون خصم</h5>
+                      <div class="coupon-container">
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="أدخل كود الخصم">
+                          <button class="btn btn-primary" type="button" id="applyCouponButton">تطبيق</button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                      <h5 class="mb-3">ملاحظات للسائق</h5>
+                      <textarea class="form-control" rows="3" placeholder="أضف ملاحظاتك هنا..."></textarea>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                      <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-4">ملخص الطلب</h5>
+                        
+                        <div class="trip-route mb-4">
+                          <div class="trip-route-point">
+                            <h6 class="fw-bold text-dark mb-0">موقع الانطلاق</h6>
+                            <p class="text-muted small mb-1">حي النخيل، شارع الأمير تركي، الرياض</p>
+                            <p class="text-muted small mb-1">
+                              <i class="bi bi-calendar me-1"></i> <span id="summaryDate"></span>
+                              <i class="bi bi-clock ms-2 me-1"></i> <span id="summaryTime"></span>
+                            </p>
+                          </div>
+                          <div class="trip-route-point">
+                            <h6 class="fw-bold text-dark mb-0">الوجهة</h6>
+                            <p class="text-muted small mb-0">برج المملكة، طريق الملك فهد، الرياض</p>
+                          </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>نوع المركبة:</span>
+                            <span>اقتصادي</span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>سعر الرحلة:</span>
+                            <span>18.00 ر.س</span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>الخيارات الإضافية:</span>
+                            <span>0.00 ر.س</span>
+                          </div>
+                          <div class="d-flex justify-content-between text-success" id="discountRow" style="display: none;">
+                            <span>خصم:</span>
+                            <span>-0.00 ر.س</span>
+                          </div>
+                          <hr>
+                          <div class="d-flex justify-content-between fw-bold">
+                            <span>الإجمالي:</span>
+                            <span>18.00 ر.س</span>
+                          </div>
+                        </div>
+                        
+                        <div class="mt-auto">
+                          <div class="d-flex">
+                            <button onclick="goToStep(2)" class="btn btn-secondary me-2">
+                              السابق
+                            </button>
+                            <button onclick="goToStep(4)" class="btn btn-primary flex-grow-1">
+                              <i class="bi bi-arrow-left me-2"></i> التالي: تأكيد الحجز
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Step 4: Booking Confirmation -->
+              <div id="step4" class="booking-step-content" style="display: none;">
+                <div class="loading-indicator" id="bookingLoading">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">جاري التحميل...</span>
+                  </div>
+                  <p class="mt-2">جاري تأكيد الحجز...</p>
+                </div>
+                
+                <div id="confirmationContent">
+                  <div class="booking-confirmation">
+                    <div class="icon">
+                      <i class="bi bi-check-circle"></i>
+                    </div>
+                    <h4>تم حجز رحلتك بنجاح!</h4>
+                    <p class="text-muted mb-4">سنرسل لك إشعاراً عند وصول السائق</p>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                          <h5 class="mb-3">تفاصيل الرحلة</h5>
+                          <div class="trip-route mb-3">
+                            <div class="trip-route-point">
+                              <h6 class="fw-bold text-dark mb-0">موقع الانطلاق</h6>
+                              <p class="text-muted small mb-1">حي النخيل، شارع الأمير تركي، الرياض</p>
+                            </div>
+                            <div class="trip-route-point">
+                              <h6 class="fw-bold text-dark mb-0">الوجهة</h6>
+                              <p class="text-muted small mb-0">برج المملكة، طريق الملك فهد، الرياض</p>
+                            </div>
+                          </div>
+                          
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>تاريخ الرحلة:</span>
+                            <span id="finalDate"></span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>وقت الرحلة:</span>
+                            <span id="finalTime"></span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>نوع المركبة:</span>
+                            <span>اقتصادي</span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-1">
+                            <span>رقم الرحلة:</span>
+                            <span>T-98765</span>
+                          </div>
+                          <div class="d-flex justify-content-between fw-bold">
+                            <span>الإجمالي:</span>
+                            <span>18.00 ر.س</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                      <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                          <h5 class="mb-3">معلومات السائق</h5>
+                          <div class="driver-preview mb-3">
+                            <div class="d-flex align-items-center mb-3">
+                              <img src="../assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle me-3" width="60" height="60">
+                              <div>
+                                <h6 class="mb-0">أحمد محمد</h6>
+                                <div class="d-flex align-items-center">
+                                  <span class="me-1 text-warning"><i class="bi bi-star-fill"></i> 4.9</span>
+                                  <span class="text-muted small">(254 تقييم)</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mb-1">
+                              <span><i class="bi bi-car-front me-2"></i> مركبة:</span>
+                              <span>تويوتا كامري أبيض</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                              <span><i class="bi bi-card-text me-2"></i> رقم اللوحة:</span>
+                              <span>ح ر د 5432</span>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                              <button class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-telephone me-1"></i> اتصال
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="d-flex justify-content-center mt-2">
+                    <a href="passenger-dashbord.html" class="btn btn-primary me-2">
+                      <i class="bi bi-house-door me-1"></i> العودة للرئيسية
+                    </a>
+                    <a href="passenger-trips.html" class="btn btn-outline-primary">
+                      <i class="bi bi-clock-history me-1"></i> عرض رحلاتي
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer py-4 mt-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0">&copy; 2025 رايد. جميع الحقوق محفوظة</p>
+        </div>
+        <div class="col-md-6">
+          <div class="text-md-end">
+            <a href="#" class="text-muted me-3">شروط الاستخدام</a>
+            <a href="#" class="text-muted me-3">سياسة الخصوصية</a>
+            <a href="#" class="text-muted">اتصل بنا</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../serviceWorker.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker not registered', err));
+      });
+    }
+  </script>
+
+  <script>
+    // Current step tracking
+    let currentStep = 1;
+    
+    // Date and Time Setup
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set today's date as default
+      const today = new Date();
+      const dateString = today.toISOString().split('T')[0];
+      document.getElementById('tripDate').value = dateString;
+      
+      // Format date for display
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = today.toLocaleDateString('ar-SA', options);
+      document.getElementById('summaryDate').textContent = formattedDate;
+      document.getElementById('finalDate').textContent = formattedDate;
+      
+      // Set current time (rounded to nearest 15 minutes) as default
+      let hours = today.getHours();
+      let minutes = today.getMinutes();
+      minutes = Math.ceil(minutes / 15) * 15;
+      if (minutes === 60) {
+        minutes = 0;
+        hours += 1;
+      }
+      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      document.getElementById('tripTime').value = timeString;
+      document.getElementById('summaryTime').textContent = timeString;
+      document.getElementById('finalTime').textContent = timeString;
+      
+      // Update summary when date/time changes
+      document.getElementById('tripDate').addEventListener('change', function() {
+        const selectedDate = new Date(this.value);
+        const formattedDate = selectedDate.toLocaleDateString('ar-SA', options);
+        document.getElementById('summaryDate').textContent = formattedDate;
+        document.getElementById('finalDate').textContent = formattedDate;
+      });
+      
+      document.getElementById('tripTime').addEventListener('change', function() {
+        document.getElementById('summaryTime').textContent = this.value;
+        document.getElementById('finalTime').textContent = this.value;
+      });
+      
+      // Set coupon button action
+      document.getElementById('applyCouponButton').addEventListener('click', function() {
+        document.getElementById('discountRow').style.display = 'flex';
+        // Show success message
+        alert('تم تطبيق الكوبون بنجاح!');
+      });
+    });
+    
+    // Navigation between steps
+    function goToStep(step) {
+      // Hide current step
+      document.getElementById(`step${currentStep}`).style.display = 'none';
+      
+      // Show loading for transitions that might need it
+      if (currentStep === 1 && step === 2) {
+        document.getElementById('mapLoading').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('mapLoading').style.display = 'none';
+        }, 1000);
+      }
+      
+      if (currentStep === 3 && step === 4) {
+        document.getElementById('bookingLoading').style.display = 'block';
+        document.getElementById('confirmationContent').style.display = 'none';
+        setTimeout(() => {
+          document.getElementById('bookingLoading').style.display = 'none';
+          document.getElementById('confirmationContent').style.display = 'block';
+        }, 2000);
+      }
+      
+      // Update step indicators
+      document.getElementById(`step${currentStep}-indicator`).classList.remove('active');
+      if (step > currentStep) {
+        document.getElementById(`step${currentStep}-indicator`).classList.add('completed');
+        document.getElementById(`step${currentStep}-indicator`).innerHTML = '<i class="bi bi-check"></i>';
+      } else {
+        document.getElementById(`step${currentStep}-indicator`).textContent = currentStep;
+      }
+      
+      // Update current step and show it
+      currentStep = step;
+      document.getElementById(`step${currentStep}-indicator`).classList.add('active');
+      document.getElementById(`step${currentStep}`).style.display = 'block';
+      
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+    
+    // Select favorite location
+    function selectFavoriteLocation(element, type) {
+      const location = element.getAttribute('data-location');
+      if (type === 'pickup') {
+        document.getElementById('pickupLocation').value = location;
+        document.getElementById('summaryPickup').textContent = location;
+      } else {
+        document.getElementById('dropoffLocation').value = location;
+        document.getElementById('summaryDropoff').textContent = location;
+      }
+    }
+    
+    // Select vehicle option
+    function selectVehicleOption(element) {
+      // Remove selected class from all options
+      const options = document.querySelectorAll('.vehicle-option');
+      options.forEach(option => option.classList.remove('selected'));
+      
+      // Add selected class to clicked option
+      element.classList.add('selected');
+      
+      // Update price in summary based on selection
+      // In a real app, you would calculate this dynamically
+    }
+    
+    // Select payment method
+    function selectPaymentMethod(element) {
+      // Remove selected class from all methods
+      const methods = document.querySelectorAll('.payment-method');
+      methods.forEach(method => method.classList.remove('selected'));
+      
+      // Add selected class to clicked method
+      element.classList.add('selected');
+      
+      // Check the radio button in this method
+      const radio = element.querySelector('input[type="radio"]');
+      radio.checked = true;
+    }
+    
+    // Calculate extras total
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        let extrasTotal = 0;
+        
+        if (document.getElementById('petFriendlyOption').checked) extrasTotal += 5;
+        if (document.getElementById('extraLuggageOption').checked) extrasTotal += 7;
+        if (document.getElementById('priorityPickupOption').checked) extrasTotal += 10;
+        
+        document.getElementById('extraOptions').textContent = extrasTotal.toFixed(2) + ' ر.س';
+        
+        const baseFare = 18.00;
+        const totalFare = baseFare + extrasTotal;
+        document.getElementById('totalFare').textContent = totalFare.toFixed(2) + ' ر.س';
+      });
+    });
+  </script>
+</body>
+</html>

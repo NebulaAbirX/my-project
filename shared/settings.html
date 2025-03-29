@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>رايد - إعدادات السائق</title>
+  <meta name="description" content="إعدادات حساب السائق في تطبيق رايد لمشاركة الركوب">
+  <meta name="keywords" content="مشاركة الركوب، سائق، تطبيق ويب تقدمي، إعدادات">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="assets/css/driver-dashboard.css" rel="stylesheet">
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#3498db">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    .status-badge {
+      padding: 0.35rem 0.6rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .status-online {
+      background-color: #28a745;
+      color: white;
+    }
+    .status-offline {
+      background-color: #6c757d;
+      color: white;
+    }
+    .status-toggle {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .status-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #28a745;
+    }
+    input:focus + .slider {
+      box-shadow: 0 0 1px #28a745;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    .dashboard-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+
+<body class="driver-dashboard rtl">
+  <!-- Header -->
+  <header id="header" class="header shadow-sm fixed-top bg-white">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <button class="btn btn-sm d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <a href="index.html" class="logo d-flex align-items-center">
+          <span class="fs-4 fw-bold text-primary">رايد</span>
+          <span class="badge bg-primary ms-2 text-uppercase">السائق</span>
+        </a>
+      </div>
+      
+      <div class="d-flex align-items-center gap-3">
+        <!-- إضافة زر الإشعارات -->
+        <div class="dropdown">
+          <button class="btn btn-link position-relative text-dark p-0" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell-fill fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              3
+              <span class="visually-hidden">إشعارات غير مقروءة</span>
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+            <li><h6 class="dropdown-header">الإشعارات</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-car-front text-primary bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">طلب رحلة جديد</h6>
+                  <p class="mb-0 text-muted small">من العميل سارة العبدالله</p>
+                  <small class="text-muted">منذ 5 دقائق</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-cash text-success bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">تأكيد استلام دفعة نقدية</h6>
+                  <p class="mb-0 text-muted small">تم تسجيل استلام 65 ر.س من العميل</p>
+                  <small class="text-muted">منذ ساعتين</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-star-fill text-warning bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">تقييم جديد (5 نجوم)</h6>
+                  <p class="mb-0 text-muted small">قام العميل محمد بتقييمك بـ 5 نجوم</p>
+                  <small class="text-muted">منذ 4 ساعات</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-center" href="#">عرض جميع الإشعارات</a></li>
+          </ul>
+        </div>
+        <img src="assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle" width="40" height="40">
+      </div>
+    </div>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 col-xl-2 offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header d-lg-none">
+          <h5 class="offcanvas-title">القائمة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <div class="d-flex flex-column flex-shrink-0 p-3 h-100">
+          <div class="text-center mb-4 d-lg-none">
+            <img src="assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle mb-2" width="80" height="80">
+            <h6 class="mb-0">أحمد محمد</h6>
+            <p class="text-muted small mb-2">ID: S-578942</p>
+          </div>
+          
+          <ul class="nav nav-pills flex-column mb-auto sidebar-nav">
+            <li class="nav-item">
+              <a href="driver.html" class="nav-link">
+                <i class="bi bi-speedometer2 me-2"></i>
+                لوحة التحكم
+              </a>
+            </li>
+            <li>
+              <a href="trips.html" class="nav-link">
+                <i class="bi bi-car-front me-2"></i>
+                الرحلات
+              </a>
+            </li>
+            <li>
+              <a href="earnings.html" class="nav-link">
+                <i class="bi bi-wallet me-2"></i>
+                الأرباح
+              </a>
+            </li>
+            <li>
+              <a href="chat.html" class="nav-link">
+                <i class="bi bi-chat-dots me-2"></i>
+                الدردشات
+              </a>
+            </li>
+            <li>
+              <a href="profile.html" class="nav-link">
+                <i class="bi bi-person me-2"></i>
+                الملف الشخصي
+              </a>
+            </li>
+            <li>
+              <a href="settings.html" class="nav-link active">
+                <i class="bi bi-gear me-2"></i>
+                الإعدادات
+              </a>
+            </li>
+            <li>
+              <a href="support.html" class="nav-link">
+                <i class="bi bi-question-circle me-2"></i>
+                الدعم الفني
+              </a>
+            </li>
+          </ul>
+          <hr>
+          <a href="#logout" class="nav-link">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            تسجيل الخروج
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9 col-xl-10 py-5 ms-auto" style="margin-top: 60px;">
+        <div class="container-fluid">
+          <!-- Settings Section (Main Content) -->
+          <section id="settings" class="mb-5">
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5><i class="bi bi-gear me-2"></i> الإعدادات</h5>
+                <button class="btn btn-sm btn-outline-primary">حفظ التغييرات</button>
+              </div>
+              
+              <!-- إعدادات الحالة -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">حالة التوفر</h6>
+                  <div class="d-flex align-items-center">
+                    <span class="status-text me-3">حالتك:</span>
+                    <span id="statusBadge" class="status-badge status-offline">غير متصل</span>
+                    <label class="status-toggle ms-3">
+                      <input type="checkbox" id="statusToggle">
+                      <span class="slider"></span>
+                    </label>
+                    <span class="ms-3 text-muted small">قم بتفعيل هذا الخيار عندما تكون متاحاً لاستقبال طلبات الرحلات</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- إعدادات المدفوعات -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">إعدادات المدفوعات</h6>
+                  <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <strong>تنبيه:</strong> حالياً، يتم قبول الدفع النقدي فقط من العملاء مباشرةً. لا يدعم التطبيق الدفع عبر الإنترنت.
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="cashNotify" checked>
+                    <label class="form-check-label" for="cashNotify">تلقي إشعارات تأكيد المدفوعات النقدية</label>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="preferredMoneyOption" class="form-label">الخيار المفضل للتعامل النقدي</label>
+                    <select class="form-select" id="preferredMoneyOption">
+                      <option value="exact" selected>المبلغ المضبوط فقط</option>
+                      <option value="change">أقبل تقديم الباقي للعميل</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="requestReceipt" checked>
+                    <label class="form-check-label" for="requestReceipt">إصدار إيصال للعميل عند طلبه</label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- إعدادات التقييم -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">إعدادات التقييم</h6>
+                  <div class="alert alert-warning">
+                    <i class="bi bi-star-fill me-2"></i>
+                    <strong>هام:</strong> التقييمات تؤثر مباشرة على ترتيبك في قائمة السائقين وظهور الطلبات لك.
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="autoRateReminder" checked>
+                    <label class="form-check-label" for="autoRateReminder">تذكير العميل بتقييمك بعد الرحلة</label>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="ratingNotification" checked>
+                    <label class="form-check-label" for="ratingNotification">إشعارات التقييمات الجديدة</label>
+                  </div>
+                  
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="showRatingHistory">
+                    <label class="form-check-label" for="showRatingHistory">عرض سجل تقييماتي للركاب الجدد</label>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- إعدادات الإشعارات -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">إعدادات الإشعارات</h6>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="pushNotifications" checked>
+                    <label class="form-check-label" for="pushNotifications">إشعارات الدفع (Push)</label>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="soundNotifications" checked>
+                    <label class="form-check-label" for="soundNotifications">التنبيهات الصوتية</label>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="newTrips" checked>
+                    <label class="form-check-label" for="newTrips">إشعارات الرحلات الجديدة</label>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="newMessages" checked>
+                    <label class="form-check-label" for="newMessages">إشعارات الرسائل الجديدة</label>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="promotions">
+                    <label class="form-check-label" for="promotions">الإشعارات الترويجية والعروض</label>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="notificationTime" class="form-label">وقت التوقف عن إرسال الإشعارات</label>
+                    <select class="form-select" id="notificationTime">
+                      <option value="none">أي وقت (24 ساعة)</option>
+                      <option value="22-7">من الساعة 10 م إلى 7 ص</option>
+                      <option value="23-6">من الساعة 11 م إلى 6 ص</option>
+                      <option value="0-5">من الساعة 12 ص إلى 5 ص</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- إعدادات التطبيق -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">إعدادات التطبيق</h6>
+                  
+                  <div class="mb-3">
+                    <label for="languageSelect" class="form-label">اللغة</label>
+                    <select class="form-select" id="languageSelect">
+                      <option value="ar" selected>العربية</option>
+                      <option value="en">English</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="darkMode">
+                    <label class="form-check-label" for="darkMode">الوضع الداكن</label>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="dataPreservation" checked>
+                    <label class="form-check-label" for="dataPreservation">حفظ البيانات محلياً لتحسين الأداء</label>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="mapProvider" class="form-label">مزود خدمة الخرائط</label>
+                    <select class="form-select" id="mapProvider">
+                      <option value="google" selected>خرائط جوجل</option>
+                      <option value="mapbox">Mapbox</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- إعدادات الأمان والخصوصية -->
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">الأمان والخصوصية</h6>
+                  
+                  <div class="mb-3">
+                    <button class="btn btn-outline-primary mb-3">تغيير كلمة المرور</button>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="twoFactorAuth">
+                    <label class="form-check-label" for="twoFactorAuth">تفعيل المصادقة الثنائية</label>
+                  </div>
+                  
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="shareLocation" checked>
+                    <label class="form-check-label" for="shareLocation">مشاركة الموقع مع العملاء أثناء الرحلة فقط</label>
+                  </div>
+                  
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="shareProfileInfo" checked>
+                    <label class="form-check-label" for="shareProfileInfo">عرض معلومات الملف الشخصي للعملاء</label>
+                  </div>
+                  
+                  <hr>
+                  
+                  <div class="mb-3">
+                    <a href="#" class="text-danger">
+                      <i class="bi bi-trash me-1"></i> حذف جميع بيانات التطبيق المحلية
+                    </a>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <a href="#" class="text-danger">
+                      <i class="bi bi-shield-exclamation me-1"></i> تعليق الحساب مؤقتاً
+                    </a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- زر الحفظ الرئيسي -->
+              <div class="text-end mt-4">
+                <button class="btn btn-light me-2">إلغاء</button>
+                <button class="btn btn-primary">حفظ التغييرات</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer py-4 mt-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0">&copy; 2025 رايد. جميع الحقوق محفوظة</p>
+        </div>
+        <div class="col-md-6">
+          <div class="text-md-end">
+            <a href="#" class="text-muted me-3">شروط الاستخدام</a>
+            <a href="#" class="text-muted me-3">سياسة الخصوصية</a>
+            <a href="#" class="text-muted">اتصل بنا</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker not registered', err));
+      });
+    }
+  </script>
+
+  <!-- Status Toggle Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const statusToggle = document.getElementById('statusToggle');
+      const statusBadge = document.getElementById('statusBadge');
+      
+      statusToggle.addEventListener('change', function() {
+        if (this.checked) {
+          statusBadge.textContent = 'متصل';
+          statusBadge.classList.remove('status-offline');
+          statusBadge.classList.add('status-online');
+        } else {
+          statusBadge.textContent = 'غير متصل';
+          statusBadge.classList.remove('status-online');
+          statusBadge.classList.add('status-offline');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

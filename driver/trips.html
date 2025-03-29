@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>رايد - إدارة الرحلات</title>
+  <meta name="description" content="إدارة رحلات السائق في تطبيق رايد لمشاركة الركوب">
+  <meta name="keywords" content="مشاركة الركوب، رحلات، سائق، تطبيق ويب تقدمي">
+
+  <!-- Favicons -->
+  <link href="../assets/img/favicon.png" rel="icon">
+  <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+  <link href="../assets/css/driver-dashboard.css" rel="stylesheet">
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#3498db">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    .status-badge {
+      padding: 0.35rem 0.6rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .status-online {
+      background-color: #28a745;
+      color: white;
+    }
+    .status-offline {
+      background-color: #6c757d;
+      color: white;
+    }
+    .trip-badge {
+      padding: 0.35rem 0.6rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .trip-active {
+      background-color: #28a745;
+      color: white;
+    }
+    .trip-pending {
+      background-color: #ffc107;
+      color: #212529;
+    }
+    .trip-completed {
+      background-color: #6c757d;
+      color: white;
+    }
+    .trip-cancelled {
+      background-color: #dc3545;
+      color: white;
+    }
+    .dashboard-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      margin-bottom: 1.5rem;
+    }
+    .trip-route {
+      position: relative;
+      padding-right: 30px;
+    }
+    .trip-route:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 10px;
+      height: 100%;
+      width: 2px;
+      background-color: #e9ecef;
+    }
+    .trip-route-point {
+      position: relative;
+      padding-bottom: 15px;
+    }
+    .trip-route-point:before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      right: -30px;
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      background-color: #3498db;
+    }
+    .trip-route-point:last-child:before {
+      background-color: #dc3545;
+    }
+    .trip-card {
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .trip-card:hover {
+      transform: translateY(-5px);
+    }
+    .map-container {
+      height: 300px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body class="driver-dashboard rtl">
+  <!-- Header -->
+  <header id="header" class="header shadow-sm fixed-top bg-white">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <button class="btn btn-sm d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <a href="index.html" class="logo d-flex align-items-center">
+          <span class="fs-4 fw-bold text-primary">رايد</span>
+          <span class="badge bg-primary ms-2 text-uppercase">السائق</span>
+        </a>
+      </div>
+      
+      <div class="d-flex align-items-center gap-3">
+        <!-- إضافة زر الإشعارات -->
+        <div class="dropdown">
+          <button class="btn btn-link position-relative text-dark p-0" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell-fill fs-5"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              3
+              <span class="visually-hidden">إشعارات غير مقروءة</span>
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+            <li><h6 class="dropdown-header">الإشعارات</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-car-front text-primary bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">طلب رحلة جديد</h6>
+                  <p class="mb-0 text-muted small">من العميل سارة العبدالله</p>
+                  <small class="text-muted">منذ 5 دقائق</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-cash text-success bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">تأكيد استلام دفعة نقدية</h6>
+                  <p class="mb-0 text-muted small">تم تسجيل استلام 65 ر.س من العميل</p>
+                  <small class="text-muted">منذ ساعتين</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-star-fill text-warning bg-light p-2 rounded-circle"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0 fw-bold">تقييم جديد (5 نجوم)</h6>
+                  <p class="mb-0 text-muted small">قام العميل محمد بتقييمك بـ 5 نجوم</p>
+                  <small class="text-muted">منذ 4 ساعات</small>
+                </div>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-center" href="#">عرض جميع الإشعارات</a></li>
+          </ul>
+        </div>
+        <img src="../assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle" width="40" height="40">
+      </div>
+    </div>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 col-xl-2 offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header d-lg-none">
+          <h5 class="offcanvas-title">القائمة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close"></button>
+        </div>
+        <div class="d-flex flex-column flex-shrink-0 p-3 h-100">
+          <div class="text-center mb-4 d-lg-none">
+            <img src="../assets/img/avatar-1.webp" alt="صورة السائق" class="rounded-circle mb-2" width="80" height="80">
+            <h6 class="mb-0">أحمد محمد</h6>
+            <p class="text-muted small mb-2">ID: S-578942</p>
+          </div>
+          
+          <ul class="nav nav-pills flex-column mb-auto sidebar-nav">
+            <li class="nav-item">
+              <a href="driver.html" class="nav-link">
+                <i class="bi bi-speedometer2 me-2"></i>
+                لوحة التحكم
+              </a>
+            </li>
+            <li>
+              <a href="trips.html" class="nav-link active">
+                <i class="bi bi-car-front me-2"></i>
+                الرحلات
+              </a>
+            </li>
+            <li>
+              <a href="earnings.html" class="nav-link">
+                <i class="bi bi-wallet me-2"></i>
+                الأرباح
+              </a>
+            </li>
+            <li>
+              <a href="../chat.html" class="nav-link">
+                <i class="bi bi-chat-dots me-2"></i>
+                الدردشات
+              </a>
+            </li>
+            <li>
+              <a href="../profile.html" class="nav-link">
+                <i class="bi bi-person me-2"></i>
+                الملف الشخصي
+              </a>
+            </li>
+            <li>
+              <a href="../settings.html" class="nav-link">
+                <i class="bi bi-gear me-2"></i>
+                الإعدادات
+              </a>
+            </li>
+            <li>
+              <a href="support.html" class="nav-link">
+                <i class="bi bi-question-circle me-2"></i>
+                الدعم الفني
+              </a>
+            </li>
+          </ul>
+          <hr>
+          <a href="#logout" class="nav-link">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            تسجيل الخروج
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9 col-xl-10 py-5 ms-auto" style="margin-top: 60px;">
+        <div class="container-fluid">
+                   <!-- Quick Actions Section -->
+          <section class="mb-5">
+            <div class="dashboard-card">
+              <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <div class="d-flex align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-car-front me-2"></i> إدارة الرحلات</h5>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="d-flex justify-content-md-end">
+                    <a href="add-trip.html" class="btn btn-primary me-2">
+                      <i class="bi bi-plus-circle me-1"></i> إضافة رحلة
+                    </a>
+                    <button class="btn btn-outline-primary me-2">
+                      <i class="bi bi-filter me-1"></i> تصفية
+                    </button>
+                    <div class="dropdown">
+                      <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-sort-down me-1"></i> ترتيب حسب
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                        <li><a class="dropdown-item" href="#">الأحدث</a></li>
+                        <li><a class="dropdown-item" href="#">السعر: من الأعلى إلى الأقل</a></li>
+                        <li><a class="dropdown-item" href="#">السعر: من الأقل إلى الأعلى</a></li>
+                        <li><a class="dropdown-item" href="#">المسافة: من الأقرب إلى الأبعد</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- New Trip Requests -->
+          <section id="newTrips" class="mb-5">
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5><i class="bi bi-bell me-2"></i> طلبات الرحلات الجديدة</h5>
+                <span class="badge bg-primary rounded-pill">2 طلب جديد</span>
+              </div>
+
+              <div class="row">
+                <!-- طلب رحلة #1 -->
+                <div class="col-md-6 mb-4">
+                  <div class="card border-0 shadow-sm trip-card" data-bs-toggle="modal" data-bs-target="#tripModal1">
+                    <div class="card-header bg-white py-3">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <img src="../assets/img/avatar-3.webp" alt="صورة العميل" class="rounded-circle me-3" width="40" height="40">
+                          <div>
+                            <h6 class="mb-0">سارة العبدالله</h6>
+                            <div class="d-flex align-items-center">
+                              <span class="me-1 text-warning"><i class="bi bi-star-fill"></i> 4.8</span>
+                              <span class="text-muted small">(43 رحلة)</span>
+                            </div>
+                          </div>
+                        </div>
+                        <span class="trip-badge trip-pending">قيد الانتظار</span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="trip-route mb-3">
+                        <div class="trip-route-point">
+                          <h6 class="fw-bold text-dark mb-0">برج المملكة</h6>
+                          <p class="text-muted small mb-1">طريق الملك فهد، حي العليا، الرياض</p>
+                        </div>
+                        <div class="trip-route-point">
+                          <h6 class="fw-bold text-dark mb-0">الرياض بارك</h6>
+                          <p class="text-muted small mb-0">طريق الملك عبدالله، حي المروج، الرياض</p>
+                        </div>
+                      </div>
+                      <div class="row text-center mt-4">
+                        <div class="col-4">
+                          <h6 class="fw-bold text-dark mb-1">15.5 كم</h6>
+                          <p class="text-muted small mb-0">المسافة</p>
+                        </div>
+                        <div class="col-4">
+                          <h6 class="fw-bold text-dark mb-1">25 دقيقة</h6>
+                          <p class="text-muted small mb-0">المدة المتوقعة</p>
+                        </div>
+                        <div class="col-4">
+                          <h6 class="fw-bold text-dark mb-1">45 ر.س</h6>
+                          <p class="text-muted small mb-0">السعر</p>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small"><i class="bi bi-clock me-1"></i> ينتهي الطلب خلال: 40 ثانية</span>
+                        <div>
+                          <button class="btn btn-sm btn-outline-danger me-2">رفض</button>
+                          <button class="btn btn-sm btn-primary">قبول</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- طلب رحلة #2 -->
+                <div class="col-md-6 mb-4">
+                  <div class="card border-0 shadow-sm trip-card" data-bs-toggle="modal" data-bs-target="#tripModal2">
+                    <div class="card-header bg-white py-3">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                          <img src="../assets/img/avatar-2.webp" alt="صورة العميل" class="rounded-circle me-3" width="40" height="40">
+                          <div>
+                            <h6 class="mb-0">محمد العتيبي</h6>
+                            <div class="d-flex align-items-center">
+                              <span class="me-1 text-warning"><i class="bi bi-star-fill"></i> 4.5</span>
+                              <span class="text-muted small">(27 رحلة)</span>
+                            </div>
+                          </div>
+                        </div>
+                        <span class="trip-badge trip-pending">قيد الانتظار</span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="trip-route mb-3">
+                        <div class="trip-route-point">
+                          <h6 class="fw-bold text-dark mb-0">جامعة الملك سعود</h6>
+                          <p class="text-muted small mb-1">طريق الملك عبدالله، الرياض</p>
+                        </div>
+                        <div class="trip-route-point">
+                          <h6 class="fw-bold text-dark mb-0">مول العرب</h6>
+                          <p class="text-muted small mb-0">طريق الملك عبدالعزيز، حي العليا، الرياض</p>
+                        </div>
+                      </div>
+                      <div class="row text-center mt-4">
+                        <div class="col-4">
+                          <h6 class="fw-bold text-dark mb-1">10.2 كم</h6>
+                          <p class="text-muted small mb-0">المسافة</p>
+                        </div>
+                        <div class="col-4">
+                          <h6 class="fw-bold text-dark mb-1">18 دقيقة</h6>
+                          <p class="text-muted small mb-0">المدة المتوقعة</p>
+                        </div>
+                        <div class="col-4">
+                          <h6 class="fw-bold text-dark mb-1">35 ر.س</h6>
+                          <p class="text-muted small mb-0">السعر</p>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small"><i class="bi bi-clock me-1"></i> ينتهي الطلب خلال: 1:15 دقيقة</span>
+                        <div>
+                          <button class="btn btn-sm btn-outline-danger me-2">رفض</button>
+                          <button class="btn btn-sm btn-primary">قبول</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Active Trips -->
+          <section id="activeTrips" class="mb-5">
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5><i class="bi bi-car-front me-2"></i> الرحلات النشطة</h5>
+                <span class="badge bg-success rounded-pill">1 رحلة نشطة</span>
+              </div>
+
+              <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                      <img src="../assets/img/avatar-5.webp" alt="صورة العميل" class="rounded-circle me-3" width="40" height="40">
+                      <div>
+                        <h6 class="mb-0">خالد القحطاني</h6>
+                        <div class="d-flex align-items-center">
+                          <span class="me-1 text-warning"><i class="bi bi-star-fill"></i> 4.7</span>
+                          <span class="text-muted small">(18 رحلة)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="trip-badge trip-active">نشطة</span>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- خريطة المسار -->
+                  <div class="map-container">
+                    <div class="text-center">
+                      <i class="bi bi-map fs-1 text-secondary mb-2"></i>
+                      <h6>خريطة المسار</h6>
+                      <p class="text-muted small">تم وصولك لنقطة الالتقاء، في انتظار صعود الراكب</p>
+                    </div>
+                  </div>
+                  
+                  <div class="trip-route mb-3">
+                    <div class="trip-route-point">
+                      <h6 class="fw-bold text-success mb-0">مطعم كودو - فرع النخيل <span class="badge bg-success ms-2">أنت هنا</span></h6>
+                      <p class="text-muted small mb-1">طريق عثمان بن عفان، حي النخيل، الرياض</p>
+                    </div>
+                    <div class="trip-route-point">
+                      <h6 class="fw-bold text-dark mb-0">مستشفى المملكة</h6>
+                      <p class="text-muted small mb-0">طريق العليا، حي العليا، الرياض</p>
+                    </div>
+                  </div>
+                  <div class="row text-center mt-4">
+                    <div class="col-3">
+                      <h6 class="fw-bold text-dark mb-1">7.8 كم</h6>
+                      <p class="text-muted small mb-0">المسافة</p>
+                    </div>
+                    <div class="col-3">
+                      <h6 class="fw-bold text-dark mb-1">12 دقيقة</h6>
+                      <p class="text-muted small mb-0">المدة المتوقعة</p>
+                    </div>
+                    <div class="col-3">
+                      <h6 class="fw-bold text-dark mb-1">25 ر.س</h6>
+                      <p class="text-muted small mb-0">السعر</p>
+                    </div>
+                    <div class="col-3">
+                      <h6 class="fw-bold text-dark mb-1">نقدي</h6>
+                      <p class="text-muted small mb-0">طريقة الدفع</p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <button class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="bi bi-telephone me-1"></i> اتصال
+                      </button>
+                      <button class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-chat-dots me-1"></i> محادثة
+                      </button>
+                    </div>
+                    <div>
+                      <button class="btn btn-sm btn-outline-danger me-2">إلغاء الرحلة</button>
+                      <button class="btn btn-sm btn-success">وصول الراكب</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Trip History -->
+          <section id="tripHistory" class="mb-5">
+            <div class="dashboard-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5><i class="bi bi-clock-history me-2"></i> سجل الرحلات</h5>
+                <button class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-download me-1"></i> تصدير السجل
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col">رقم الرحلة</th>
+                      <th scope="col">التاريخ</th>
+                      <th scope="col">العميل</th>
+                      <th scope="col">المسار</th>
+                      <th scope="col">المبلغ</th>
+                      <th scope="col">الحالة</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><small>#T-45921</small></td>
+                      <td><small>اليوم، 10:15 ص</small></td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="../assets/img/avatar-4.webp" class="rounded-circle me-2" width="25" height="25">
+                          <small>نورة السعيد</small>
+                        </div>
+                      </td>
+                      <td><small>مول النخيل → مستشفى التخصصي</small></td>
+                      <td><small>32 ر.س</small></td>
+                      <td><span class="trip-badge trip-completed">مكتملة</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-link p-0">التفاصيل</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><small>#T-45918</small></td>
+                      <td><small>أمس، 8:30 م</small></td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="../assets/img/avatar-2.webp" class="rounded-circle me-2" width="25" height="25">
+                          <small>محمد العتيبي</small>
+                        </div>
+                      </td>
+                      <td><small>جامعة الامام → العثيم مول</small></td>
+                      <td><small>50 ر.س</small></td>
+                      <td><span class="trip-badge trip-completed">مكتملة</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-link p-0">التفاصيل</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><small>#T-45910</small></td>
+                      <td><small>أمس، 4:15 م</small></td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="../assets/img/avatar-3.webp" class="rounded-circle me-2" width="25" height="25">
+                          <small>سارة العبدالله</small>
+                        </div>
+                      </td>
+                      <td><small>برج المملكة → الرياض بارك</small></td>
+                      <td><small>45 ر.س</small></td>
+                      <td><span class="trip-badge trip-completed">مكتملة</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-link p-0">التفاصيل</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><small>#T-45902</small></td>
+                      <td><small>أمس، 12:30 م</small></td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center text-white me-2" style="width: 25px; height: 25px;">
+                            <small>ع</small>
+                          </div>
+                          <small>عبدالله الشمري</small>
+                        </div>
+                      </td>
+                      <td><small>حي الملز → وزارة الداخلية</small></td>
+                      <td><small>28 ر.س</small></td>
+                      <td><span class="trip-badge trip-cancelled">ملغية</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-link p-0">التفاصيل</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><small>#T-45897</small></td>
+                      <td><small>26 فبراير، 9:45 ص</small></td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <img src="../assets/img/avatar-5.webp" class="rounded-circle me-2" width="25" height="25">
+                          <small>خالد القحطاني</small>
+                        </div>
+                      </td>
+                      <td><small>مطعم كودو → مستشفى المملكة</small></td>
+                      <td><small>25 ر.س</small></td>
+                      <td><span class="trip-badge trip-completed">مكتملة</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-link p-0">التفاصيل</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <nav aria-label="Page navigation" class="mt-3">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">السابق</a>
+                  </li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">التالي</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trip Request Modal -->
+  <div class="modal fade" id="tripModal1" tabindex="-1" aria-labelledby="tripModalLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tripModalLabel1">تفاصيل طلب الرحلة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-4 mb-3 mb-md-0">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="text-center mb-3">
+                    <img src="../assets/img/avatar-3.webp" alt="صورة العميل" class="rounded-circle mb-2" width="80" height="80">
+                    <h5 class="mb-0">سارة العبدالله</h5>
+                    <div class="d-flex justify-content-center align-items-center my-2">
+                      <span class="me-1 text-warning"><i class="bi bi-star-fill"></i> 4.8</span>
+                      <span class="text-muted small">(43 رحلة)</span>
+                    </div>
+                    <p class="badge bg-success">عميل منذ 2022</p>
+                  </div>
+                  <hr>
+                  <div class="mb-3">
+                    <small class="text-muted d-block">طريقة الدفع المفضلة:</small>
+                    <span><i class="bi bi-cash me-2 text-success"></i> نقداً</span>
+                  </div>
+                  <div class="mb-3">
+                    <small class="text-muted d-block">اللغة المفضلة:</small>
+                    <span>العربية</span>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">ملاحظات:</small>
+                    <span class="small">من فضلك الإسراع، لدي موعد مهم</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="map-container mb-3">
+                <div class="text-center">
+                  <i class="bi bi-map fs-1 text-secondary mb-2"></i>
+                  <h6>خريطة المسار</h6>
+                </div>
+              </div>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="mb-3">تفاصيل الرحلة</h5>
+                  <div class="trip-route mb-3">
+                    <div class="trip-route-point">
+                      <h6 class="fw-bold text-dark mb-0">برج المملكة</h6>
+                      <p class="text-muted small mb-1">طريق الملك فهد، حي العليا، الرياض</p>
+                      <p class="text-muted small mb-0"><strong>وقت الوصول المتوقع:</strong> 3:45 م</p>
+                    </div>
+                    <div class="trip-route-point">
+                      <h6 class="fw-bold text-dark mb-0">الرياض بارك</h6>
+                      <p class="text-muted small mb-0">طريق الملك عبدالله، حي المروج، الرياض</p>
+                    </div>
+                  </div>
+                  <div class="row text-center mt-4">
+                    <div class="col-md-3 col-6 mb-3 mb-md-0">
+                      <h6 class="fw-bold text-dark mb-1">15.5 كم</h6>
+                      <p class="text-muted small mb-0">المسافة</p>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3 mb-md-0">
+                      <h6 class="fw-bold text-dark mb-1">25 دقيقة</h6>
+                      <p class="text-muted small mb-0">المدة المتوقعة</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <h6 class="fw-bold text-dark mb-1">45 ر.س</h6>
+                      <p class="text-muted small mb-0">السعر</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <h6 class="fw-bold text-dark mb-1">نقدي</h6>
+                      <p class="text-muted small mb-0">طريقة الدفع</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="d-flex justify-content-between w-100">
+            <div>
+              <small class="text-danger"><i class="bi bi-clock me-1"></i> ينتهي الطلب خلال: 25 ثانية</small>
+            </div>
+            <div>
+              <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal">رفض</button>
+              <button type="button" class="btn btn-primary">قبول الرحلة</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer py-4 mt-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0">&copy; 2025 رايد. جميع الحقوق محفوظة</p>
+        </div>
+        <div class="col-md-6">
+          <div class="text-md-end">
+            <a href="#" class="text-muted me-3">شروط الاستخدام</a>
+            <a href="#" class="text-muted me-3">سياسة الخصوصية</a>
+            <a href="#" class="text-muted">اتصل بنا</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker not registered', err));
+      });
+    }
+  </script>
+
+  <!-- Status Toggle Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const statusToggle = document.getElementById('statusToggle');
+      const statusBadge = document.getElementById('statusBadge');
+      
+      statusToggle.addEventListener('change', function() {
+        if (this.checked) {
+          statusBadge.textContent = 'متصل';
+          statusBadge.classList.remove('status-offline');
+          statusBadge.classList.add('status-online');
+        } else {
+          statusBadge.textContent = 'غير متصل';
+          statusBadge.classList.remove('status-online');
+          statusBadge.classList.add('status-offline');
+        }
+      });
+
+      // أزرار قبول ورفض الرحلة
+      const acceptButtons = document.querySelectorAll('.btn-primary:not([data-bs-dismiss="modal"])');
+      const rejectButtons = document.querySelectorAll('.btn-outline-danger');
+      
+      acceptButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // هنا يمكن إضافة تنفيذ قبول الرحلة
+          alert('تم قبول الرحلة بنجاح!');
+          
+          // يمكن إغلاق النافذة المنبثقة إذا كانت مفتوحة
+          const modal = bootstrap.Modal.getInstance(document.querySelector('.modal.show'));
+          if (modal) {
+            modal.hide();
+          }
+        });
+      });
+      
+      rejectButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          if (!this.hasAttribute('data-bs-dismiss')) {
+            // هنا يمكن إضافة تنفيذ رفض الرحلة
+            alert('تم رفض الرحلة');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+<link rel="stylesheet" href="">
